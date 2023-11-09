@@ -1,0 +1,47 @@
+.pdf-viewer{
+
+    .pdf-document{
+        // margin-top: 100px ;
+        position: relative;
+        max-width: 700px;
+        max-height: 600px;
+        // overflow: auto;
+    }
+
+    .pdf-page{
+        // position: absolute;
+        max-width: 500px;
+        max-height: 550px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 100px;
+    }
+
+    .forword-btn, .backword-btn {
+        position: absolute;
+        background: transparent;
+        color: #4FEFFF;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .forword-btn {
+        right: 0;
+    }
+
+    .backword-btn {
+        left: -4%;
+    }
+
+    p{
+        color: #4FEFFF;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+
+    
+
