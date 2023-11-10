@@ -40,7 +40,8 @@
 
 .container.contact-page,
 .container.about-page,
-.container.portfolio-page {
+.container.certificate-page,
+.container.projects-page {
   
     h1 {
       font-size: 53px;
@@ -126,7 +127,8 @@
 
     &.contact-page,
     &.about-page,
-    &.portfolio-page {
+    &.certificate-page,
+    &.projects-page {
       .text-zone {
         position: initial;
         transform: none;
@@ -137,7 +139,8 @@
       }
     }
 
-    &.portfolio-page {
+    &.certificate-page,
+    &.Projects-page {
       width: 100%;
       padding: 20px;
       box-sizing: border-box;

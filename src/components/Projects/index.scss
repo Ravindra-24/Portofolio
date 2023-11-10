@@ -1,52 +1,108 @@
-.project-page {
-    .projects-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 20px; // Adjust the gap as needed
-    
-        .project-card {
-            background-color: #f4f4f4;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-    
-            &:hover {
-                transform: scale(1.05);
-            }
-    
-            img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 4px;
-                margin-bottom: 10px;
-            }
-    
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 10px;
-            }
-    
-            p {
-                color: #555;
-                margin-bottom: 15px;
-            }
-    
-            a {
-                display: inline-block;
-                padding: 8px 16px;
-                background-color: #3498db;
-                color: #fff;
-                text-decoration: none;
-                border-radius: 4px;
-                transition: background-color 0.3s ease-in-out;
-    
-                &:hover {
-                    background-color: #2980b9;
-                }
-            }
+.projects-page {
+  //   padding-left: 100px;
+  //   padding-right: 50px;
+    // width: calc(100% - 150px);
+  //   position: initial;
+    // height: 100%;
+    // overflow: auto;
+
+  h1.page-title {
+    margin-left: 100px;
+    margin-top: 100px;
+  }
+
+  .projects-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding-bottom: 100px;
+
+    .project-card {
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      position: relative;
+      flex: 1 1 20%;
+      height: 400px;
+        // width: 300px;
+      overflow: hidden;
+      opacity: 0;
+      border-radius: 10px;
+      max-width: calc(30% - 10px);
+      min-width: 200px;
+      transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      animation: fadeInUp 2s 2s;
+      animation-fill-mode: forwards;
+
+      &:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+        font-family: 'Coolvetica', cursive;
+        margin: 20px;
+        color: #4fefff;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0 20px 20px;
+        color: #ecf1f1;
+      }
+
+      a {
+        display: block;
+        padding: 10px 20px;
+        background-color: #4fefff;
+        color: #ecf1f1;
+        border: solid 1px #4fefff;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+          background-color: transparent;
+          color: #4fefff;
         }
+      }
+
+      // Change card and button colors
+      background: #0c161f;
+      border: 1px solid #4fefff;
+
+      a {
+        background-color: #4fefff;
+        color: #0c161f;
+
+        &:hover {
+          background: transparent;
+        }
+      }
     }
-    
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .projects-page{
+    width: 100%;
+
+      h1.page-title {
+      margin-left: 30px;
+      margin-top: 20px;
+    }
+  }
+  
 }

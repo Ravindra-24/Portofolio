@@ -143,7 +143,7 @@ const Certificates = () => {
 
   return (
     <>
-      <div className="container portfolio-page">
+      <div className="container certificate-page">
         <h1 className="page-title">
           <AnimatedLetters
             letterClass={letterClass}
