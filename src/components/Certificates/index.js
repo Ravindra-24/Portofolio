@@ -154,7 +154,7 @@ const Certificates = () => {
         <div className="portfolio-container">{renderPortfolio(portfolio)}</div>
       </div>
       {modal && (
-        <Modal modal={modal} setModal={setModal} pdfUrl={selectedPDF} />
+        <Modal modal={modal} setModal={setModal} pdfUrl={selectedPDF} setSelectedPDF={setSelectedPDF}/>
       )}
       <Loader type="pacman" />
     </>

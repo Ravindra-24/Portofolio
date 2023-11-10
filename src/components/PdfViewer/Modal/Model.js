@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import PdfViewer from '../pdfModal/pdf'
 
-export default function Modal({ modal, setModal, pdfUrl }) {
+export default function Modal({ modal, setModal, pdfUrl, setSelectedPDF }) {
   // const [modal, setModal] = useState(false);
 
   const toggleModal = () => {
     setModal(!modal)
+    setSelectedPDF(null)
   }
 
   if (modal === true) {
