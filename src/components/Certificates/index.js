@@ -23,7 +23,7 @@ const Certificates = () => {
   const [portfolio, setPortfolio] = useState([
     {
       id: 1,
-      title: 'Devtown Internship',
+      title: 'Devtown Course',
       image: devtownCourese,
       url:"" ,
       github: '',
@@ -58,21 +58,21 @@ const Certificates = () => {
     },
     {
       id: 6,
-      title: 'Project Initiation Starting a Successful Project',
+      title: 'Project Initiation',
       image: googleCertificate2Img,
       url: "",
       github: '',
     },
     {
       id: 7,
-      title: 'Putting_it_all_together',
+      title: 'Putting it all together',
       image: googleCertificate3Img,
       url: "",
       github: '',
     },
     {
       id: 8,
-      title: 'Project Execution Running the Project',
+      title: 'Project Execution',
       image: googleCertificate4Img,
       url: "",
       github: '',
@@ -86,7 +86,7 @@ const Certificates = () => {
     },
     {
       id: 10,
-      title: 'Foundations of Project Management',
+      title: 'MERN Stack Course',
       image: nullClassImg,
       url: "",
       github: '',
