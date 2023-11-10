@@ -30,7 +30,7 @@ function PdfViewer({ pdfUrl }) {
         onLoadSuccess={onDocumentLoadSuccess}
         onError={onError}
       >
-        <Page pageNumber={pageNumber} width={580} height={600} />
+        <Page pageNumber={pageNumber} />
       </Document>
       <p>
         Page {pageNumber} of {numPages}

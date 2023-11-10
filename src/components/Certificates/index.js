@@ -90,6 +90,7 @@ const Certificates = () => {
 
   const toggleModal = (pdf) => {
     console.log('clicked')
+    console.log(pdf)
     setSelectedPDF(pdf)
     setModal(!modal)
   }
@@ -107,9 +108,6 @@ const Certificates = () => {
   const renderPortfolio = (portfolio) => {
     return (
       <>
-        {modal && (
-          <Modal modal={modal} setModal={setModal} pdfUrl={selectedPDF} />
-        )}
         <div className="images-container">
           {portfolio.map((pdf) => (
             <div key={pdf.id} className="image-box">
@@ -120,7 +118,7 @@ const Certificates = () => {
               />
               <div className="content">
                 <h3 className="title">{pdf.title}</h3>
-                <button className="btn" onclick={() => toggleModal(pdf.url)}>
+                <button className="btn" onClick={() => toggleModal(pdf)}>
                   Open
                 </button>
               </div>
@@ -143,7 +141,9 @@ const Certificates = () => {
         </h1>
         <div className="portfolio-container">{renderPortfolio(portfolio)}</div>
       </div>
-
+      {modal && (
+        <Modal modal={modal} setModal={setModal} pdfUrl={selectedPDF} />
+      )}
       <Loader type="pacman" />
     </>
   )

@@ -3,19 +3,19 @@
     .pdf-document{
         // margin-top: 100px ;
         position: relative;
-        max-width: 700px;
-        max-height: 600px;
-        // overflow: auto;
+        max-width: 600px;
+        // max-height: 600px;
+        overflow: auto;
     }
 
     .pdf-page{
         // position: absolute;
-        max-width: 500px;
-        max-height: 550px;
+        // max-width: 500px;
+        // max-height: 550px;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: 100px;
+        // margin-top: 100px;
     }
 
     .forword-btn, .backword-btn {
@@ -32,7 +32,7 @@
     }
 
     .backword-btn {
-        left: -4%;
+        left: 0;
     }
 
     p{
