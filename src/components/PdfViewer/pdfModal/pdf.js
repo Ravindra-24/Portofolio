@@ -26,7 +26,7 @@ function PdfViewer({ pdfUrl }) {
     <div className="pdf-viewer">
       {error && <div>Error: {error.message}</div>}
       <Document
-        file={pdfUrl}
+        file={pdfUrl.url}
         onLoadSuccess={onDocumentLoadSuccess}
         onError={onError}
       >

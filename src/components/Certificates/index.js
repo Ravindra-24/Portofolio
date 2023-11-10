@@ -89,8 +89,6 @@ const Certificates = () => {
   const [selectedPDF, setSelectedPDF] = useState(null)
 
   const toggleModal = (pdf) => {
-    console.log('clicked')
-    console.log(pdf)
     setSelectedPDF(pdf)
     setModal(!modal)
   }
