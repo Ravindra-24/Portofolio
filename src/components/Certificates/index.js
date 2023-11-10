@@ -2,19 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Loader from 'react-loaders'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
-import { getDocs, collection } from 'firebase/firestore'
-import { db } from '../../firebase'
 import Modal from '../PdfViewer/Modal/Model'
-import devtown from '../../data/Certificates_Devtown.pdf'
-import googleCertificate1 from '../../data/Foundations of Project Management_1_certficate.pdf'
-import googleCertificate2 from '../../data/Project Initiation Starting a Successful Project_2_certificate.pdf'
-import googleCertificate3 from '../../data/Putting_it_all_together_Chapter_3.pdf'
-import googleCertificate4 from '../../data/Project Execution Running the Project_Chapter_4.pdf'
-import googleCertificate5 from '../../data/Agile Project Management_Chapter_5.pdf'
-import sap from '../../data/SAP.pdf'
-import nullClass from '../../data/certificate_NullClass.pdf'
 
-import devtownImg from '../../assets/images/pdf/Course_Completion_certificate_page-0001.jpg'
+import devtownCourese from '../../assets/images/pdf/Course_Completion_certificate_page-0001.jpg'
+import devtownTaining from '../../assets/images/pdf/Training_Completion_Certificate_page-0001.jpg'
+import devtownLor from '../../assets/images/pdf/LOR_page-0001.jpg'
+import devtownInternship from '../../assets/images/pdf/Internship_Completion_certificate_page-0001.jpg'
 import googleCertificate1Img from '../../assets/images/pdf/Foundations of Project Management_1_certficate_page-0001.jpg'
 import googleCertificate2Img from '../../assets/images/pdf/Project Initiation Starting a Successful Project_2_certificate_page-0001.jpg'
 import googleCertificate3Img from '../../assets/images/pdf/Putting_it_all_together_Chapter_3_page-0001.jpg'
@@ -31,57 +24,78 @@ const Certificates = () => {
     {
       id: 1,
       title: 'Devtown Internship',
-      image: devtownImg,
-      url: devtown,
+      image: devtownCourese,
+      url:"" ,
       github: '',
     },
     {
       id: 2,
-      title: 'Foundations of Project Management',
-      image: googleCertificate1Img,
-      url: googleCertificate1,
+      title: 'Devtown Taining',
+      image: devtownTaining,
+      url:"" ,
       github: '',
     },
     {
       id: 3,
-      title: 'Project Initiation Starting a Successful Project',
-      image: googleCertificate2Img,
-      url: googleCertificate2,
+      title: 'Devtown Internship',
+      image: devtownInternship,
+      url:"" ,
       github: '',
     },
     {
       id: 4,
-      title: 'Putting_it_all_together',
-      image: googleCertificate3Img,
-      url: googleCertificate3,
+      title: 'Devtown LOR',
+      image: devtownLor,
+      url:"" ,
       github: '',
     },
     {
       id: 5,
-      title: 'Project Execution Running the Project',
-      image: googleCertificate4Img,
-      url: googleCertificate4,
+      title: 'Foundations of Project Management',
+      image: googleCertificate1Img,
+      url:"" ,
       github: '',
     },
     {
       id: 6,
-      title: 'Agile Project Management',
-      image: googleCertificate5Img,
-      url: googleCertificate5,
+      title: 'Project Initiation Starting a Successful Project',
+      image: googleCertificate2Img,
+      url: "",
       github: '',
     },
     {
       id: 7,
-      title: 'Foundations of Project Management',
-      image: nullClassImg,
-      url: nullClass,
+      title: 'Putting_it_all_together',
+      image: googleCertificate3Img,
+      url: "",
       github: '',
     },
     {
       id: 8,
+      title: 'Project Execution Running the Project',
+      image: googleCertificate4Img,
+      url: "",
+      github: '',
+    },
+    {
+      id: 9,
+      title: 'Agile Project Management',
+      image: googleCertificate5Img,
+      url: "",
+      github: '',
+    },
+    {
+      id: 10,
+      title: 'Foundations of Project Management',
+      image: nullClassImg,
+      url: "",
+      github: '',
+    },
+    {
+      id: 10,
       title: 'SAP Training',
       image: SAPImg,
-      url: sap,
+      url: "",
       github: '',
     },
   ])

@@ -25,6 +25,7 @@
         overflow: hidden;
         border-radius: 10px;
         max-width: calc(25% - 10px);
+        min-width: 150px;
         transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         
 
@@ -54,8 +55,8 @@
             margin-bottom: 0;
             margin-top: 0;
             color: #fff;
-            font-size: 24px;
-            font-weight: 500;
+            font-size: 2rem;
+            font-weight: 400;
             line-height: 24px;
         }
 
@@ -76,7 +77,7 @@
             border: 2px solid #4FEFFF;
             border-radius: 4px;
             font-size: 14px;
-            color: #fff;
+            color: #4FEFFF;
             background: transparent;
             text-transform: uppercase;
             font-weight: 700;
@@ -87,7 +88,7 @@
         .btn:hover {
             transform: translateY(-3px);
             background: #4FEFFF;
-            color: #000;
+            color: #333;
         }
 
         &:after {

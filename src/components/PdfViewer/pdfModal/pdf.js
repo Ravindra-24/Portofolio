@@ -26,11 +26,11 @@ function PdfViewer({ pdfUrl }) {
     <div className="pdf-viewer">
       {error && <div>Error: {error.message}</div>}
       <Document
-        file={pdfUrl.url}
+        file={pdfUrl}
         onLoadSuccess={onDocumentLoadSuccess}
         onError={onError}
       >
-        <Page pageNumber={pageNumber} />
+        <Page pageNumber={pageNumber} width={580} height={600} />
       </Document>
       <p>
         Page {pageNumber} of {numPages}
