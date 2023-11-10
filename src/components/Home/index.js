@@ -60,12 +60,15 @@ const Home = () => {
             />
           </h1>
           <h2>Full Stack Web Development / React.JS / MERN-Stack</h2>
+          <div className='btns'>
           <Link to="/contact" className="flat-button">
             CONTACT ME
           </Link>
-          <Link to="/contact" className="cv-button">
-            DOWNLOAD CV
-          </Link>
+          
+            <a className='cv-button' href='CV.pdf' download={"Ravindra_7887975721_Resume.pdf"}>
+              DOWNLOAD CV
+            </a>
+          </div>
         </div>
         <Logo />
       </div>

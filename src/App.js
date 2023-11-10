@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 import Dashboard from './components/Dashboard'
 import './App.scss'
 import Certificates from './components/Certificates'
+import Projects from './components/Projects'
 import { pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -17,13 +18,12 @@ function App() {
   return (
     <>
       <Routes>
-    {/* <Modal/> */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/certificate" element={<Certificates />} />
-          <Route path="/project" element={<Certificates />} />
+          <Route path="/project" element={<Projects />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>

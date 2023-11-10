@@ -23,10 +23,13 @@
         flex: 1 1 20%;
         height: 400px;
         overflow: hidden;
+        opacity: 0;
         border-radius: 10px;
         max-width: calc(25% - 10px);
         min-width: 150px;
         transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        animation: fadeInUp 2s 2s;
+        animation-fill-mode: forwards;
         
 
         .portfolio-image {
@@ -115,6 +118,7 @@
             background: transparent;
         }
     }
+}
 
     /* Add this SCSS to style the portfolio items */
 
@@ -233,4 +237,3 @@
   //   padding: 20px;
   // }
   
-}
