@@ -3,9 +3,7 @@ import Loader from 'react-loaders'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
 
-import pinterest from '../../assets/images/projects/pinterest.jpeg'
-import stackoverflow from '../../assets/images/projects/stackoverflow.jpeg'
-import taskList from '../../assets/images/projects/task-list.jpeg'
+import projects from './data'
 
 const Projects = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
@@ -20,27 +18,6 @@ const Projects = () => {
     }
   }, [])
 
-  const projects = [
-    {
-      name: 'PinterestLike',
-      description: 'This is the first project',
-      image: pinterest,
-      url: 'https://pinterest-clone-tau.vercel.app/',
-    },
-    {
-      name: 'Stackoverflow Clone',
-      description: 'This is the second project',
-      image: stackoverflow,
-      url: 'https://stackoverflow-clone-ravindra.vercel.app/',
-    },
-    {
-      name: 'Task List',
-      description: 'This is the third project',
-      image: taskList,
-      url: 'https://task-list-blue.vercel.app/',
-    },
-  ]
-
   return (
     <>
       <div className="container projects-page">
@@ -52,12 +29,23 @@ const Projects = () => {
           />
         </h1>
         <div className="projects-container">
-          {projects.map((project, index) => (
-            <div className="project-card" key={index}>
+          {projects.map((project) => (
+            <div className="project-card" key={project.id}>
               <img src={project.image} alt={project.name} />
               <h2>{project.name}</h2>
+              <p className="skill-tag">{project.skills}</p>
               <p>{project.description}</p>
-              <a target='_blank' rel='noreferrer' href={project.url}>View Project</a>
+              <a
+                className="card-btn"
+                target="_blank"
+                rel="noreferrer"
+                href={project.github}
+              >
+                Open Repository
+              </a>
+              <a target="_blank" rel="noreferrer" href={project.url}>
+                View Project
+              </a>
             </div>
           ))}
         </div>

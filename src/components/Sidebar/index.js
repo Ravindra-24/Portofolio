@@ -14,6 +14,7 @@ import {
   faBars,
   faClose,
   faCertificate,
+  faFile,
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -49,7 +50,7 @@ const Sidebar = () => {
           to="/project"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faRProject} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faFile} color="#4d4d4e" />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -70,7 +71,7 @@ const Sidebar = () => {
         <FontAwesomeIcon
           onClick={() => setShowNav(false)}
           icon={faClose}
-          color="#ffd700"
+          color="#4FEFFF"
           size="3x"
           className="close-icon"
         />

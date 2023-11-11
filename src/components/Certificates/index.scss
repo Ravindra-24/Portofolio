@@ -15,8 +15,19 @@
         display: flex;
         gap: 15px;
         flex-wrap: wrap;
-        padding-bottom: 100px;
+        padding-bottom: 50px;
     }
+
+    h2.heading {
+        font-size: 25px;
+      font-family: 'Coolvetica';
+      color: #4FEFFF;
+      font-weight: 200;
+      margin-top: 0;
+      position: relative;
+      display: block;
+      width: 100%;
+      }
 
     .image-box {
         position: relative;
