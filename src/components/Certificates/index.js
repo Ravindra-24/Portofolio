@@ -34,7 +34,7 @@ const Certificates = () => {
           <h2 className="heading">
             <AnimatedLetters
               letterClass={letterClass}
-              strArray={'Full Stack Web Development'.split('')}
+              strArray={'Full Stack Development'.split('')}
               idx={10}
             />
           </h2>
