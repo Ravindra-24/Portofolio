@@ -14,7 +14,7 @@
     img {
       display: block;
       margin: 8px auto;
-      width: 50px;
+      width: 24px;
       height: auto;
 
       &.sub-logo {
@@ -46,7 +46,7 @@
       }
 
       &:hover {
-        color: #4FEFFF;
+        color: #4fefff;
 
         svg {
           opacity: 0;
@@ -90,21 +90,21 @@
       }
     }
 
-    a.certificate-link {
-      &:after {
-        content: 'CERTIFICATES';
-      }
-    }
-
     a.project-link {
       &:after {
         content: 'PROJECTS';
       }
     }
 
+    a.certificate-link {
+      &:after {
+        content: 'CERTIFICATES';
+      }
+    }
+
     a.active {
       svg {
-        color: #4FEFFF;
+        color: #4fefff;
       }
     }
   }
@@ -130,30 +130,84 @@
 
       &:hover {
         .anchor-icon {
-          color: #4FEFFF;
+          color: #4fefff;
         }
       }
     }
   }
 }
 
-.hamburger-icon, .close-icon {
+.hamburger-icon,
+.close-icon {
   display: none;
 }
 
+// @media screen and (max-width: 1200px) {
+//   .nav-bar {
+//     background: transparent;
+//     position: initial;
+//     height: auto;
+//     min-height: auto;
+
+//      ul, nav {
+//       display: none;
+//      }
+
+//      nav {
+//       width: 100%;
+//       top: 0;
+//       left: 0;
+//       background: #181818;
+//       height: 100%;
+//       margin: 0;
+//       z-index: 2;
+//       position: fixed;
+
+//       &.mobile-show {
+//         display: block;
+//       }
+
+//       a {
+//         display: flex;
+//         justify-content: center;
+//         align-items: center;
+//       }
+
+//       a:after {
+//         opacity: 1;
+//         position: initial;
+//         width: auto;
+//         margin-left: 10PX;
+//       }
+
+//       a svg {
+//         opacity: 1 !important;
+//       }
+//      }
+
+//      .hamburger-icon,
+//      .close-icon {
+//         position: absolute;
+//         top: 15px;
+//         right: 15px;
+//         display: block;
+//      }
+//   }
+// }
 
 @media screen and (max-width: 1200px) {
-  .nav-bar { 
+  .nav-bar {
     background: transparent;
     position: initial;
     height: auto;
     min-height: auto;
 
-     ul, nav {
+    ul,
+    nav {
       display: none;
-     }
+    }
 
-     nav {
+    nav {
       width: 100%;
       top: 0;
       left: 0;
@@ -162,14 +216,29 @@
       margin: 0;
       z-index: 2;
       position: fixed;
+      animation: slideInRight 0.5s ease-in-out forwards;
+
+      .nav-title {
+        margin-top: 50%;
+        display: block;
+        margin-left: 40%;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 20px;
+        color: #4d4d4e;
+      }
 
       &.mobile-show {
         display: block;
       }
 
+      nav.animate-nav {
+        animation: slideOutRight 0.5s ease-in-out forwards;
+      }
+
       a {
         display: flex;
-        justify-content: center;
+        // justify-content: center;
         align-items: center;
       }
 
@@ -177,20 +246,42 @@
         opacity: 1;
         position: initial;
         width: auto;
-        margin-left: 10PX;
+        margin-left: 10px;
+      }
+
+      a.active {
+        color: #4fefff;
       }
 
       a svg {
         opacity: 1 !important;
       }
-     }
+    }
 
-     .hamburger-icon,
-     .close-icon {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        display: block;
-     }
+    .hamburger-icon,
+    .close-icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: block;
+    }
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
   }
 }

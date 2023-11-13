@@ -27,7 +27,8 @@ const Sidebar = () => {
         <img src={LogoS} alt="Logo" className="side-logo" />
         {/* <img className="sub-logo" src={LogoSubtitle} alt="slobodan" /> */}
       </Link>
-      <nav className={showNav ? 'mobile-show' : ''}>
+      <nav className={showNav ? ' mobile-show' : 'animate-nav'}>
+        <div className="nav-title">
         <NavLink
           exact="true"
           activeclassname="active"
@@ -72,9 +73,10 @@ const Sidebar = () => {
           onClick={() => setShowNav(false)}
           icon={faClose}
           color="#4FEFFF"
-          size="3x"
+          size="2x"
           className="close-icon"
         />
+        </div>
       </nav>
       <ul>
         <li>
