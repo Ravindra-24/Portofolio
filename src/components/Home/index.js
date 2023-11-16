@@ -4,10 +4,13 @@ import Loader from 'react-loaders'
 import AnimatedLetters from '../AnimatedLetters'
 import LogoTitle from '../../assets/images/logo-r.png'
 import Logo from './Logo'
+import { getDocs, collection } from 'firebase/firestore'
+import { db } from '../../firebase'
 import './index.scss'
 
 const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
+  const [selectedPDF, setSelectedPDF] = useState([])
 
   const nameArray = ['a', 'v', 'i', 'n', 'd', 'r', 'a']
   const jobArray = [
@@ -32,6 +35,16 @@ const Home = () => {
       setLetterClass('text-animate-hover')
     }, 4000)
   }, [])
+
+  useEffect(() => {
+    getCV()
+  }, [])
+
+  const getCV = async () => {
+    const CV = await getDocs(collection(db, 'CV'))
+    const resume = CV.docs.map((doc) => doc.data())
+    setSelectedPDF(resume[0].image)
+  }
 
   return (
     <>
@@ -60,12 +73,18 @@ const Home = () => {
             />
           </h1>
           <h2>Full Stack Web Development / React.JS / MERN-Stack</h2>
-          <div className='btns'>
-          <Link to="/contact" className="flat-button">
-            CONTACT ME
-          </Link>
-          
-            <a className='cv-button' href='CV.pdf' download={"Ravindra_7887975721_Resume.pdf"}>
+          <div className="btns">
+            <Link to="/contact" className="flat-button">
+              CONTACT ME
+            </Link>
+
+            <a
+              className="cv-button"
+              href={selectedPDF}
+              target="_blank"
+              rel="noreferrer"
+              // download={selectedPDF.image}
+            >
               DOWNLOAD CV
             </a>
           </div>

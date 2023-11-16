@@ -49,7 +49,7 @@ const Home = () => {
 
     const savePortfolio = async (portfolio) => {
         try {
-            await addDoc(collection(db, 'portfolio'), portfolio);
+            await addDoc(collection(db, 'Other Certificates'), portfolio);
             window.location.reload(false);
         } catch (error) {
             alert('Failed to add portfolio');

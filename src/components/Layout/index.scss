@@ -41,7 +41,9 @@
 .container.contact-page,
 .container.about-page,
 .container.certificate-page,
-.container.projects-page {
+.container.projects-page, 
+.container.education-page,
+.container.skills-page {
   
     h1 {
       font-size: 53px;
@@ -128,7 +130,9 @@
     &.contact-page,
     &.about-page,
     &.certificate-page,
-    &.projects-page {
+    &.projects-page,
+    &.education-page,
+    &.skills-page {
       .text-zone {
         position: initial;
         transform: none;
@@ -140,7 +144,9 @@
     }
 
     &.certificate-page,
-    &.Projects-page {
+    &.Projects-page,
+    &.education-page,
+    &.skills-page {
       width: 100%;
       padding: 20px;
       box-sizing: border-box;

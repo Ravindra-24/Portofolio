@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react'
 import Loader from 'react-loaders'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
-import Modal from '../PdfViewer/Modal/Model'
-import { devtown, google, other } from './Data'
-
-import '../PdfViewer/Modal/Modal.css'
+import Modal from '../ImgViewer/Model'
+import { getDocs, collection } from 'firebase/firestore'
+import { db } from '../../firebase'
+import CertficateRenderer from './CertficateRenderer'
 
 const Certificates = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
   const [modal, setModal] = useState(false)
   const [selectedPDF, setSelectedPDF] = useState(null)
-
-  const toggleModal = (pdf) => {
-    setSelectedPDF(pdf)
-    setModal(!modal)
-  }
+  const [webCertificates, setWebCertificates] = useState([])
+  const [googleCertificates, setGoogleCertificates] = useState([])
+  const [otherCertificates, setOtherCertificates] = useState([])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,83 +25,19 @@ const Certificates = () => {
     }
   }, [])
 
-  const renderPortfolio = (devtown, google, other) => {
-    return (
-      <>
-        <div className="images-container">
-          <h2 className="heading">
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={'Full Stack Development'.split('')}
-              idx={10}
-            />
-          </h2>
-          {devtown.map((pdf) => (
-            <div key={pdf.id} className="image-box">
-              <img
-                src={pdf.image}
-                alt={pdf.title}
-                className="portfolio-image"
-              />
-              <div className="content">
-                <h3 className="title">{pdf.title}</h3>
-                <button className="btn" onClick={() => toggleModal(pdf)}>
-                  Open
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="images-container">
-          <h2 className="heading">
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={'Google Project Management'.split('')}
-              idx={10}
-            />
-          </h2>
-          {google.map((pdf) => (
-            <div key={pdf.id} className="image-box">
-              <img
-                src={pdf.image}
-                alt={pdf.title}
-                className="portfolio-image"
-              />
-              <div className="content">
-                <h3 className="title">{pdf.title}</h3>
-                <button className="btn" onClick={() => toggleModal(pdf)}>
-                  Open
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="images-container">
-          <h2 className="heading">
-            <AnimatedLetters
-              letterClass={letterClass}
-              strArray={'Other Certifications'.split('')}
-              idx={10}
-            />
-          </h2>
-          {other.map((pdf) => (
-            <div key={pdf.id} className="image-box">
-              <img
-                src={pdf.image}
-                alt={pdf.title}
-                className="portfolio-image"
-              />
-              <div className="content">
-                <h3 className="title">{pdf.title}</h3>
-                <button className="btn" onClick={() => toggleModal(pdf)}>
-                  Open
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </>
+  useEffect(() => {
+    getCertficate()
+  }, [])
+
+  const getCertficate = async () => {
+    const webCert = await getDocs(
+      collection(db, 'Web Development Certificates')
     )
+    setWebCertificates(webCert.docs.map((doc) => doc.data()))
+    const googleCert = await getDocs(collection(db, 'Google Certificates'))
+    setGoogleCertificates(googleCert.docs.map((doc) => doc.data()))
+    const otherCert = await getDocs(collection(db, 'Other Certificates'))
+    setOtherCertificates(otherCert.docs.map((doc) => doc.data()))
   }
 
   return (
@@ -117,7 +51,14 @@ const Certificates = () => {
           />
         </h1>
         <div className="portfolio-container">
-          {renderPortfolio(devtown, google, other)}
+          {CertficateRenderer(
+            webCertificates,
+            googleCertificates,
+            otherCertificates,
+            modal,
+            setModal,
+            setSelectedPDF
+          )}
         </div>
       </div>
       {modal && (

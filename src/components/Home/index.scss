@@ -61,6 +61,7 @@
 
   .btns {
     .flat-button {
+      cursor: pointer;
       color: #4fefff;
       font-size: 13px;
       font-weight: 400;
@@ -82,7 +83,7 @@
     }
 
     .cv-button {
-      // color: #4FEFFF;
+      cursor: pointer;
       font-size: 13px;
       font-weight: 400;
       letter-spacing: 4px;
