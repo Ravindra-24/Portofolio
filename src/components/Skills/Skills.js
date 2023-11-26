@@ -21,7 +21,7 @@ const texts = [
   'Webpack',
   'aws ec2',
   'CI/CD pipeline',
-    'aws s3',
+  'aws s3',
 ]
 const options = {
   radius: 300,
@@ -57,7 +57,7 @@ const Skills = () => {
   return (
     <>
       <div className="container skills-page">
-      <div className="text-zone">
+        <div className="text-zone">
           <h1>
             <AnimatedLetters
               letterClass={letterClass}
@@ -66,25 +66,21 @@ const Skills = () => {
             />
           </h1>
           <p>
-            I'm a highly motivated{' '}
-            <span className="font-bold">Computer Science Graduate</span> with a
-            CGPA of
-            <span className="font-bold"> 8.65</span>, solid foundation in
-            building software product with intuitive problem-solving skills.
-            Proficient in Web development. Passionate about implementing and
-            launching new projects. Ability to translate business requirements
-            into technical solutions.
+            I honed my proficiency in front-end development technologies such as
+            <span className="font-bold">HTML, CSS</span> and <span className="font-bold">JavaScript</span>. Library likes <span className="font-bold">ReactJS</span> and <span className="font-bold">Redux</span>, etc.
+            During my final year Sponsored Project, I Worked on <span className="font-bold">NextJS</span>.
           </p>
           <p align="LEFT">
-            I'm a very ambitious{' '}
-            <span className="font-bold">Full Stack Web Developer,</span> looking
-            for a role in an established IT company with the opportunity to
-            start the career as an entry-level software engineer with a reputed
-            firm driven by technology.
+            Visit my <span className="font-bold" ><a style={{textDecoration:"underline"}} href='https://www.linkedin.com/in/ravindra-shrimant-pawar/' target='_blank' rel='noreferrer'>LinkedIn</a></span> profile and
+            Also you can check out my{' '}
+            <span className="font-bold">
+              <a style={{textDecoration:"underline"}} href='https://github.com/Ravindra-24' target='_blank' rel='noreferrer'>GitHub</a>
+            </span>{' '}
+            Profile.
           </p>
         </div>
         <div className="skills-container">
-        <span className='content'></span>
+          <span className="content"></span>
         </div>
       </div>
       <Loader type="pacman" />

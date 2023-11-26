@@ -84,6 +84,12 @@
       }
     }
 
+    a.skills-link {
+      &:after {
+        content: 'SKILLS';
+      }
+    }
+
     a.contact-link {
       &:after {
         content: 'CONTACT';
@@ -219,7 +225,7 @@
       animation: slideInRight 0.5s ease-in-out forwards;
 
       .nav-title {
-        margin-top: 50%;
+        margin-top: 40%;
         display: block;
         margin-left: 40%;
         text-align: center;
