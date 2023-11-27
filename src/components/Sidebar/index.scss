@@ -46,7 +46,7 @@
       }
 
       &:hover {
-        color: #4fefff;
+        color: #72bbc2;
 
         svg {
           opacity: 0;
@@ -218,14 +218,15 @@
       top: 0;
       left: 0;
       background: #181818;
+      // opacity: 1;
       height: 100%;
       margin: 0;
       z-index: 2;
       position: fixed;
-      animation: slideInRight 0.5s ease-in-out forwards;
+      animation: slideInRight 0.3s ease-in-out forwards;
 
       .nav-title {
-        margin-top: 40%;
+        margin-top: 20%;
         display: block;
         margin-left: 40%;
         text-align: center;
@@ -238,8 +239,8 @@
         display: block;
       }
 
-      nav.animate-nav {
-        animation: slideOutRight 0.5s ease-in-out forwards;
+      nav {
+        animation: slideOutRight 0.3s ease-in-out forwards;
       }
 
       a {
@@ -247,6 +248,12 @@
         // justify-content: center;
         align-items: center;
       }
+
+      // a:hover{
+      //   .icon-color{
+      //     color: #4fefff;
+      //   }
+      // }
 
       a:after {
         opacity: 1;
@@ -270,6 +277,7 @@
       top: 15px;
       right: 15px;
       display: block;
+
     }
   }
 }

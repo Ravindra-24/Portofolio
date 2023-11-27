@@ -52,7 +52,7 @@ const Skills = () => {
 
   useEffect(() => {
     TagCloud(container, texts, options)
-  })
+  },[])
 
   return (
     <>
@@ -68,13 +68,14 @@ const Skills = () => {
           <p>
             I honed my proficiency in front-end development technologies such as
             <span className="font-bold">HTML, CSS</span> and <span className="font-bold">JavaScript</span>. Library likes <span className="font-bold">ReactJS</span> and <span className="font-bold">Redux</span>, etc.
+            Developed most of the projects using <span className="font-bold">MERN-Stack</span> and <span className="font-bold">Redux</span> for state management.
             During my final year Sponsored Project, I Worked on <span className="font-bold">NextJS</span>.
           </p>
           <p align="LEFT">
-            Visit my <span className="font-bold" ><a style={{textDecoration:"underline"}} href='https://www.linkedin.com/in/ravindra-shrimant-pawar/' target='_blank' rel='noreferrer'>LinkedIn</a></span> profile and
+            Visit my <span ><a className="font-bold" style={{textDecoration:"underline"}} href='https://www.linkedin.com/in/ravindra-shrimant-pawar/' target='_blank' rel='noreferrer'>LinkedIn</a></span> profile and
             Also you can check out my{' '}
-            <span className="font-bold">
-              <a style={{textDecoration:"underline"}} href='https://github.com/Ravindra-24' target='_blank' rel='noreferrer'>GitHub</a>
+            <span >
+              <a className="font-bold" style={{textDecoration:"underline"}} href='https://github.com/Ravindra-24' target='_blank' rel='noreferrer'>GitHub</a>
             </span>{' '}
             Profile.
           </p>

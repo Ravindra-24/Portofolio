@@ -44,6 +44,7 @@
 .container.projects-page, 
 .container.education-page,
 .container.skills-page {
+  user-select: none;
   
     h1 {
       font-size: 53px;

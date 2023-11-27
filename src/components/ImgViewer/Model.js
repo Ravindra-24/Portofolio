@@ -22,8 +22,8 @@ export default function Modal({ modal, setModal, pdfUrl, setSelectedPDF }) {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2 className="pdf-title">{pdfUrl.title}</h2>
-            <img src={pdfUrl.image} alt={pdfUrl.title} />
+            <h2 className="pdf-title">{pdfUrl.name}</h2>
+            <img src={pdfUrl.image} alt={pdfUrl.name} />
 
             <button className="close-modal" onClick={toggleModal}>
               <FontAwesomeIcon icon={faClose} style={{ color: '#4FEFFF' }} />

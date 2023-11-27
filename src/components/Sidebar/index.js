@@ -28,7 +28,7 @@ const Sidebar = () => {
         <img src={LogoS} alt="Logo" className="side-logo" />
         {/* <img className="sub-logo" src={LogoSubtitle} alt="slobodan" /> */}
       </Link>
-      <nav className={showNav ? ' mobile-show' : 'animate-nav'}>
+      <nav className={showNav ? ' mobile-show' : ''}>
         <div className="nav-title">
         <NavLink
           exact="true"
@@ -36,7 +36,7 @@ const Sidebar = () => {
           to="/"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faHome} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faHome} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -44,7 +44,7 @@ const Sidebar = () => {
           to="/about"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faUser} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faUser} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -52,7 +52,7 @@ const Sidebar = () => {
           to="/skills"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faGear} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faGear} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -60,7 +60,7 @@ const Sidebar = () => {
           to="/project"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faFile} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faFile} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -68,7 +68,7 @@ const Sidebar = () => {
           to="/certificate"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faCertificate} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faCertificate} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"
@@ -76,7 +76,7 @@ const Sidebar = () => {
           to="/contact"
           onClick={() => setShowNav(false)}
         >
-          <FontAwesomeIcon icon={faEnvelope} color="#4d4d4e" />
+          <FontAwesomeIcon icon={faEnvelope} className='anchor-icon' />
         </NavLink>
         <FontAwesomeIcon
           onClick={() => setShowNav(false)}
