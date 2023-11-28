@@ -72,7 +72,7 @@ const Home = () => {
               idx={22}
             />
           </h1>
-          <h2>Full Stack Web Development / React.JS / MERN-Stack</h2>
+          <h2>Front-End Development / React.JS / MERN-Stack</h2>
           <div className="btns">
             <Link to="/contact" className="flat-button">
               CONTACT ME
