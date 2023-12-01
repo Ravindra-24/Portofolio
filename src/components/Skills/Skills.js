@@ -81,7 +81,7 @@ const Skills = () => {
           </p>
         </div>
         <div className="skills-container">
-          <span className="content-skills"></span>
+          <span className="content content-skills"></span>
         </div>
       </div>
       <Loader type="pacman" />
