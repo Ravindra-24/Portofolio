@@ -108,6 +108,12 @@
       }
     }
 
+    a.experience-link {
+      &:after {
+        content: 'EXPERIENCE';
+      }
+    }
+
     a.active {
       svg {
         color: #4fefff;

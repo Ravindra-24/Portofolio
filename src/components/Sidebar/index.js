@@ -16,6 +16,7 @@ import {
   faCertificate,
   faFile,
   faGear,
+  faBriefcase,
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
 
@@ -45,6 +46,14 @@ const Sidebar = () => {
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faUser} className='anchor-icon' />
+        </NavLink>
+        <NavLink
+          activeclassname="active"
+          className="experience-link"
+          to="/experience"
+          onClick={() => setShowNav(false)}
+        >
+          <FontAwesomeIcon icon={faBriefcase} className='anchor-icon' />
         </NavLink>
         <NavLink
           activeclassname="active"

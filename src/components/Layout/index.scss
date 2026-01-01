@@ -43,7 +43,8 @@
 .container.certificate-page,
 .container.projects-page, 
 .container.education-page,
-.container.skills-page {
+.container.skills-page,
+.container.experience-page {
   user-select: none;
   
     h1 {
@@ -133,7 +134,8 @@
     &.certificate-page,
     &.projects-page,
     &.education-page,
-    &.skills-page {
+    &.skills-page 
+    &.experience-page {
       .text-zone {
         position: initial;
         transform: none;
@@ -147,7 +149,8 @@
     &.certificate-page,
     &.Projects-page,
     &.education-page,
-    &.skills-page {
+    &.skills-page 
+    &.experience-page {
       width: 100%;
       padding: 20px;
       box-sizing: border-box;
