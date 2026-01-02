@@ -66,18 +66,13 @@ const Skills = () => {
             />
           </h1>
           <p>
-            I honed my proficiency in front-end development technologies such as
-            <span className="font-bold">HTML, CSS</span> and <span className="font-bold">JavaScript</span>. Library likes <span className="font-bold">ReactJS</span> and <span className="font-bold">Redux</span>, etc.
-            Developed most of the projects using <span className="font-bold">MERN-Stack</span> and <span className="font-bold">Redux</span> for state management.
-            During my final year Sponsored Project, I Worked on <span className="font-bold">NextJS</span> and <span className="font-bold">Firebase Authentication</span>.
+            I have strong front-end skills with <span className="font-bold">HTML, CSS</span>, and <span className="font-bold">JavaScript</span>, and extensive experience building interfaces with <span className="font-bold">React</span> and <span className="font-bold">Redux</span>. I build full-stack applications using the <span className="font-bold">MERN stack</span> and <span className="font-bold">Next.js</span>, and work with <span className="font-bold">Firebase</span> (Auth, Firestore, Storage) and <span className="font-bold">Google Cloud Functions</span> on the backend. I also use <span className="font-bold">Tailwind CSS</span> and <span className="font-bold">React-Bootstrap</span> for UI, and follow CI/CD and testing practices to ensure reliability.
           </p>
           <p align="LEFT">
-            Visit my <span ><a className="font-bold" style={{textDecoration:"underline"}} href='https://www.linkedin.com/in/ravindra-shrimant-pawar/' target='_blank' rel='noreferrer'>LinkedIn</a></span> profile and
-            Also you can check out my{' '}
-            <span >
-              <a className="font-bold" style={{textDecoration:"underline"}} href='https://github.com/Ravindra-24' target='_blank' rel='noreferrer'>GitHub</a>
-            </span>{' '}
-            Profile.
+            At PRIC Technology I implemented many product features including booking pages, account management, Sessions, Events, Courses, ticket transfers and editable responses, Telegram group subscriptions, and real-time analytics dashboards. I also developed an Event QR Scanning System with instant analytics and activity-based ticket validation. I focused on performance, security, and usability.
+          </p>
+          <p align="LEFT">
+            Visit my <span><a className="font-bold" style={{textDecoration: "underline"}} href="https://www.linkedin.com/in/ravindra-shrimant-pawar/" target="_blank" rel="noreferrer">LinkedIn</a></span> profile, or check my <span><a className="font-bold" style={{textDecoration: "underline"}} href="https://github.com/Ravindra-24" target="_blank" rel="noreferrer">GitHub</a></span> for projects and code samples.
           </p>
         </div>
         <div className="skills-container">
