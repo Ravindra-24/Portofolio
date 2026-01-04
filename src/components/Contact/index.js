@@ -4,10 +4,13 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
+import SubmitModal from './SubmitModal'
 import './index.scss'
 
 const Contact = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
+  const [isLoading, setIsLoading] = useState(false)
+  const [modalState, setModalState] = useState({ isOpen: false, isSuccess: false })
   const form = useRef()
 
   useEffect(() => {
@@ -18,18 +21,30 @@ const Contact = () => {
 
   const sendEmail = (e) => {
     e.preventDefault()
+    setIsLoading(true)
 
     emailjs
-      .sendForm('service_u6ercdp', 'template_md26z1o', form.current, 'okwrzVxPe3ve_F77v')
+      .sendForm(
+        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+        form.current,
+        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+      )
       .then(
         () => {
-          alert('Message successfully sent!')
-          window.location.reload(false)
+          setIsLoading(false)
+          setModalState({ isOpen: true, isSuccess: true })
+          form.current.reset()
         },
         () => {
-          alert('Failed to send the message, please try again')
+          setIsLoading(false)
+          setModalState({ isOpen: true, isSuccess: false })
         }
       )
+  }
+
+  const closeModal = () => {
+    setModalState({ isOpen: false, isSuccess: false })
   }
 
   return (
@@ -73,7 +88,12 @@ const Contact = () => {
                   ></textarea>
                 </li>
                 <li>
-                  <input type="submit" className="flat-button" value="SEND" />
+                  <input
+                    type="submit"
+                    className="flat-button"
+                    value={isLoading ? 'SENDING...' : 'SEND'}
+                    disabled={isLoading}
+                  />
                 </li>
               </ul>
             </form>
@@ -100,6 +120,11 @@ const Contact = () => {
         </div>
       </div>
       <Loader type="pacman" />
+      <SubmitModal
+        isOpen={modalState.isOpen}
+        isSuccess={modalState.isSuccess}
+        onClose={closeModal}
+      />
     </>
   )
 }
