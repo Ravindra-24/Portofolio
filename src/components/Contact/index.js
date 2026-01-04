@@ -102,7 +102,7 @@ const Contact = () => {
         <div className="info-map">
           Ravindra Pawar,
           <br />
-          Chh. Sambhajinagar(Aurangabad) 431001,
+          Hadapsar, Pune,
           <br />
           Maharashtra, India.
            <br />
