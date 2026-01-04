@@ -22,12 +22,15 @@ export default function Modal({ modal, setModal, pdfUrl, setSelectedPDF }) {
         <div className="modal">
           <div onClick={toggleModal} className="overlay"></div>
           <div className="modal-content">
-            <h2 className="pdf-title">{pdfUrl.name}</h2>
-            <img src={pdfUrl.image} alt={pdfUrl.name} />
-
-            <button className="close-modal" onClick={toggleModal}>
-              <FontAwesomeIcon icon={faClose} style={{ color: '#4FEFFF' }} />
-            </button>
+            <div className="modal-header">
+              <h2 className="pdf-title">{pdfUrl.name}</h2>
+              <button className="close-modal" onClick={toggleModal}>
+                <FontAwesomeIcon icon={faClose} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <img src={pdfUrl.image} alt={pdfUrl.name} />
+            </div>
           </div>
         </div>
       )}

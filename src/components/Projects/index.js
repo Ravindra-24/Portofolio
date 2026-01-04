@@ -44,7 +44,7 @@ const Projects = () => {
                 Open Repository
               </a>
               <a target="_blank" rel="noreferrer" href={project.url}>
-                View Project
+                Open Website
               </a>
             </div>
           ))}
