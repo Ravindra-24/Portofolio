@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faLinkedin,
   faGithub,
-  faRProject,
 } from '@fortawesome/free-brands-svg-icons'
 import {
   faHome,
@@ -22,6 +21,9 @@ import { Link, NavLink } from 'react-router-dom'
 
 const Sidebar = () => {
   const [showNav, setShowNav] = useState(false)
+  const navLinkClass = ({ isActive }) => (isActive ? 'active' : '')
+  const navLinkWithBaseClass = (baseClass) => ({ isActive }) =>
+    `${baseClass}${isActive ? ' active' : ''}`
 
   return (
     <div className="nav-bar">
@@ -32,56 +34,50 @@ const Sidebar = () => {
       <nav className={showNav ? ' mobile-show' : ''}>
         <div className="nav-title">
         <NavLink
-          exact="true"
-          activeclassname="active"
+          end
+          className={navLinkClass}
           to="/"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faHome} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="about-link"
+          className={navLinkWithBaseClass('about-link')}
           to="/about"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faUser} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="experience-link"
+          className={navLinkWithBaseClass('experience-link')}
           to="/experience"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faBriefcase} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="skills-link"
+          className={navLinkWithBaseClass('skills-link')}
           to="/skills"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faGear} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="project-link"
+          className={navLinkWithBaseClass('project-link')}
           to="/project"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faFile} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="certificate-link"
+          className={navLinkWithBaseClass('certificate-link')}
           to="/certificate"
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faCertificate} className='anchor-icon' />
         </NavLink>
         <NavLink
-          activeclassname="active"
-          className="contact-link"
+          className={navLinkWithBaseClass('contact-link')}
           to="/contact"
           onClick={() => setShowNav(false)}
         >

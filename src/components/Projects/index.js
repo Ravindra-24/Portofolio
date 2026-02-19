@@ -35,14 +35,16 @@ const Projects = () => {
               <h2>{project.name}</h2>
               <p className="skill-tag">{project.skills}</p>
               <p>{project.description}</p>
-              <a
-                className="card-btn"
-                target="_blank"
-                rel="noreferrer"
-                href={project.github}
-              >
-                Open Repository
-              </a>
+              {project.github && (
+                <a
+                  className="card-btn"
+                  target="_blank"
+                  rel="noreferrer"
+                  href={project.github}
+                >
+                  Open Repository
+                </a>
+              )}
               <a target="_blank" rel="noreferrer" href={project.url}>
                 Open Website
               </a>

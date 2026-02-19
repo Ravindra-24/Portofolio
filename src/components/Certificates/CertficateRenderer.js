@@ -2,20 +2,18 @@ import React, { useEffect, useState } from 'react'
 import AnimatedLetters from '../AnimatedLetters'
 import './index.scss'
 
-const CertficateRenderer = (
+const CertficateRenderer = ({
   webCertificates,
   googleCertificates,
   otherCertificates,
-  modal,
   setModal,
-  setSelectedPDF
-) => {
-
+  setSelectedPDF,
+}) => {
   const [letterClass, setLetterClass] = useState('text-animate')
 
   const toggleModal = (pdf) => {
     setSelectedPDF(pdf)
-    setModal(!modal)
+    setModal(true)
   }
 
   useEffect(() => {

@@ -1,20 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import './Modal.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 
 export default function Modal({ modal, setModal, pdfUrl, setSelectedPDF }) {
-
   const toggleModal = () => {
     setModal(!modal)
     setSelectedPDF(null)
   }
 
-  if (modal === true) {
-    document.body.classList.add('active-modal')
-  } else {
-    document.body.classList.remove('active-modal')
-  }
+  useEffect(() => {
+    document.body.classList.toggle('active-modal', modal)
+
+    return () => {
+      document.body.classList.remove('active-modal')
+    }
+  }, [modal])
 
   return (
     <>

@@ -14,6 +14,7 @@ const Certificates = () => {
   const [webCertificates, setWebCertificates] = useState([])
   const [googleCertificates, setGoogleCertificates] = useState([])
   const [otherCertificates, setOtherCertificates] = useState([])
+  const [fetchError, setFetchError] = useState('')
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -30,14 +31,29 @@ const Certificates = () => {
   }, [])
 
   const getCertficate = async () => {
-    const webCert = await getDocs(
-      collection(db, 'Web Development Certificates')
-    )
-    setWebCertificates(webCert.docs.map((doc) => doc.data()))
-    const googleCert = await getDocs(collection(db, 'Google Certificates'))
-    setGoogleCertificates(googleCert.docs.map((doc) => doc.data()))
-    const otherCert = await getDocs(collection(db, 'Other Certificates'))
-    setOtherCertificates(otherCert.docs.map((doc) => doc.data()))
+    try {
+      const webCert = await getDocs(
+        collection(db, 'Web Development Certificates')
+      )
+      setWebCertificates(webCert.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+
+      const googleCert = await getDocs(collection(db, 'Google Certificates'))
+      setGoogleCertificates(
+        googleCert.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+
+      const otherCert = await getDocs(collection(db, 'Other Certificates'))
+      setOtherCertificates(
+        otherCert.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+
+      setFetchError('')
+    } catch (error) {
+      setWebCertificates([])
+      setGoogleCertificates([])
+      setOtherCertificates([])
+      setFetchError('Certificates are currently unavailable.')
+    }
   }
 
   return (
@@ -51,15 +67,15 @@ const Certificates = () => {
           />
         </h1>
         <div className="portfolio-container">
-          {CertficateRenderer(
-            webCertificates,
-            googleCertificates,
-            otherCertificates,
-            modal,
-            setModal,
-            setSelectedPDF
-          )}
+          <CertficateRenderer
+            webCertificates={webCertificates}
+            googleCertificates={googleCertificates}
+            otherCertificates={otherCertificates}
+            setModal={setModal}
+            setSelectedPDF={setSelectedPDF}
+          />
         </div>
+        {fetchError && <p>{fetchError}</p>}
       </div>
       {modal && (
         <Modal

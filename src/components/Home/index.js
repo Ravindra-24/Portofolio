@@ -10,7 +10,8 @@ import './index.scss'
 
 const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
-  const [selectedPDF, setSelectedPDF] = useState([])
+  const [selectedPDF, setSelectedPDF] = useState('')
+  const [cvError, setCvError] = useState('')
 
   const nameArray = ['a', 'v', 'i', 'n', 'd', 'r', 'a']
   const jobArray = [
@@ -31,9 +32,13 @@ const Home = () => {
   ]
 
   useEffect(() => {
-    return setTimeout(() => {
+    const timer = setTimeout(() => {
       setLetterClass('text-animate-hover')
     }, 4000)
+
+    return () => {
+      clearTimeout(timer)
+    }
   }, [])
 
   useEffect(() => {
@@ -41,9 +46,14 @@ const Home = () => {
   }, [])
 
   const getCV = async () => {
-    const CV = await getDocs(collection(db, 'CV'))
-    const resume = CV.docs.map((doc) => doc.data())
-    setSelectedPDF(resume[0].image)
+    try {
+      const CV = await getDocs(collection(db, 'CV'))
+      const firstResume = CV.docs[0]?.data()
+      setSelectedPDF(firstResume?.image || '')
+    } catch (error) {
+      setSelectedPDF('')
+      setCvError('CV is currently unavailable.')
+    }
   }
 
   return (
@@ -78,16 +88,22 @@ const Home = () => {
               CONTACT ME
             </Link>
 
-            <a
-              className="cv-button"
-              href={selectedPDF}
-              target="_blank"
-              rel="noreferrer"
-              // download={selectedPDF.image}
-            >
-              DOWNLOAD CV
-            </a>
+            {selectedPDF ? (
+              <a
+                className="cv-button"
+                href={selectedPDF}
+                target="_blank"
+                rel="noreferrer"
+              >
+                DOWNLOAD CV
+              </a>
+            ) : (
+              <button type="button" className="cv-button" disabled>
+                DOWNLOAD CV
+              </button>
+            )}
           </div>
+          {cvError && <p>{cvError}</p>}
         </div>
         <Logo />
       </div>

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react'
 import {
-  faAngular,
   faCss3,
-  faGitAlt,
   faGithub,
   faHtml5,
   faJsSquare,
   faNode,
-  faNodeJs,
   faReact,
 } from '@fortawesome/free-brands-svg-icons'
 import Loader from 'react-loaders'
@@ -19,9 +16,13 @@ const About = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
 
   useEffect(() => {
-    return setTimeout(() => {
+    const timer = setTimeout(() => {
       setLetterClass('text-animate-hover')
     }, 3000)
+
+    return () => {
+      clearTimeout(timer)
+    }
   }, [])
 
   return (
