@@ -15,6 +15,8 @@ const NAVIGATION_ROUTES = [
 
 const NAVIGATION_COOLDOWN_MS = 700
 const MIN_WHEEL_DELTA = 35
+const MIN_TOUCH_SWIPE_DELTA = 60
+const NAVIGATION_HINT_STORAGE_KEY = 'route_navigation_hint_dismissed'
 
 const normalizePath = (path) => {
   if (!path) return '/'
@@ -53,7 +55,38 @@ const Layout = () => {
   const location = useLocation()
   const previousPathRef = useRef(location.pathname)
   const lastNavigationAtRef = useRef(0)
+  const touchStartYRef = useRef(null)
+  const touchStartTargetRef = useRef(null)
   const [transitionDirection, setTransitionDirection] = useState(1)
+  const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const [showNavigationHint, setShowNavigationHint] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(pointer: coarse)')
+    const updateInputType = () => {
+      setIsTouchDevice(mediaQuery.matches)
+    }
+
+    updateInputType()
+
+    if (!localStorage.getItem(NAVIGATION_HINT_STORAGE_KEY)) {
+      setShowNavigationHint(true)
+    }
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', updateInputType)
+    } else {
+      mediaQuery.addListener(updateInputType)
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', updateInputType)
+      } else {
+        mediaQuery.removeListener(updateInputType)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const previousIndex = NAVIGATION_ROUTES.indexOf(
@@ -113,10 +146,84 @@ const Layout = () => {
       navigate(NAVIGATION_ROUTES[nextIndex])
     }
 
+    const canNavigateByGesture = (target, deltaY) => {
+      if (!(target instanceof Element)) return false
+
+      if (
+        target.closest(
+          '.leaflet-container, .modal, .modal-overlay, .modal-content, [data-disable-scroll-route-nav="true"]'
+        )
+      ) {
+        return false
+      }
+
+      if (target.closest('input, textarea, select, button, [contenteditable="true"]')) {
+        return false
+      }
+
+      if (isScrollableInDirection(target, deltaY)) {
+        return false
+      }
+
+      const now = Date.now()
+      if (now - lastNavigationAtRef.current < NAVIGATION_COOLDOWN_MS) return false
+
+      return true
+    }
+
+    const moveToNeighborRoute = (direction) => {
+      const currentPath = normalizePath(location.pathname)
+      const currentIndex = NAVIGATION_ROUTES.indexOf(currentPath)
+      if (currentIndex === -1) return
+
+      const nextIndex = currentIndex + direction
+      if (nextIndex < 0 || nextIndex >= NAVIGATION_ROUTES.length) return
+
+      lastNavigationAtRef.current = Date.now()
+      setTransitionDirection(direction)
+      navigate(NAVIGATION_ROUTES[nextIndex])
+    }
+
+    const handleTouchStart = (event) => {
+      if (event.touches.length !== 1) {
+        touchStartYRef.current = null
+        touchStartTargetRef.current = null
+        return
+      }
+
+      touchStartYRef.current = event.touches[0].clientY
+      touchStartTargetRef.current = event.target
+    }
+
+    const handleTouchEnd = (event) => {
+      if (touchStartYRef.current === null || event.changedTouches.length !== 1) {
+        return
+      }
+
+      const endY = event.changedTouches[0].clientY
+      const deltaY = touchStartYRef.current - endY
+      const absDelta = Math.abs(deltaY)
+      const touchTarget =
+        event.target instanceof Element ? event.target : touchStartTargetRef.current
+
+      touchStartYRef.current = null
+      touchStartTargetRef.current = null
+
+      if (absDelta < MIN_TOUCH_SWIPE_DELTA) return
+      if (!canNavigateByGesture(touchTarget, deltaY)) return
+
+      const direction = deltaY > 0 ? 1 : -1
+      moveToNeighborRoute(direction)
+    }
+
     window.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
+    window.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     return () => {
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchend', handleTouchEnd)
     }
   }, [location.pathname, navigate])
 
@@ -130,6 +237,25 @@ const Layout = () => {
         >
           <Outlet />
         </div>
+        {showNavigationHint && (
+          <div className="navigation-hint" role="note" aria-live="polite">
+            <p>
+              {isTouchDevice
+                ? 'Tip: Swipe up or down to change pages.'
+                : 'Tip: Scroll up or down to change pages.'}
+            </p>
+            <button
+              type="button"
+              aria-label="Dismiss navigation tip"
+              onClick={() => {
+                setShowNavigationHint(false)
+                localStorage.setItem(NAVIGATION_HINT_STORAGE_KEY, 'true')
+              }}
+            >
+              Got it
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
