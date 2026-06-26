@@ -191,16 +191,7 @@ Ensure your hosting platform supports:
 - Static file serving (React build output)
 - Environment variable configuration
 
-## 📈 Performance
-
-- **Load Time:** ~30% faster via optimized Next.js builds and Firebase caching
-- **Uptime:** 99.9% via Firebase hosting and CDN
-- **Mobile Score:** 90+ Lighthouse audit
-
-## 📝 License
-
-This project is open source and available under the MIT License.
-
+  
 ## 👤 About Me
 
 I'm a **Software Developer** at PRIC Technology Private Limited with expertise in:
