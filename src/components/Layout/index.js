@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../Sidebar/'
+import { captureUtmParameters } from '../../utils/utm'
 import './index.scss'
 
 const NAVIGATION_ROUTES = [
@@ -12,6 +13,18 @@ const NAVIGATION_ROUTES = [
   '/certificate',
   '/contact',
 ]
+
+const SITE_ORIGIN = 'https://ravindrapawar.vercel.app'
+const PAGE_TITLES = {
+  '/': 'Full Stack Developer | Ravindra Pawar',
+  '/about': 'About | Ravindra Pawar',
+  '/experience': 'Experience | Ravindra Pawar',
+  '/education': 'Education | Ravindra Pawar',
+  '/skills': 'Skills | Ravindra Pawar',
+  '/project': 'Projects | Ravindra Pawar',
+  '/certificate': 'Certificates | Ravindra Pawar',
+  '/contact': 'Contact | Ravindra Pawar',
+}
 
 const NAVIGATION_COOLDOWN_MS = 700
 const MIN_WHEEL_DELTA = 35
@@ -97,6 +110,30 @@ const Layout = () => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    captureUtmParameters(location.search)
+  }, [location.search])
+
+  useEffect(() => {
+    const path = normalizePath(location.pathname)
+    const isPublicPage = Object.prototype.hasOwnProperty.call(PAGE_TITLES, path)
+    const canonicalUrl = `${SITE_ORIGIN}${path === '/' ? '/' : path}`
+
+    document.title = PAGE_TITLES[path] || 'Ravindra Pawar'
+    document
+      .querySelector('link[rel="canonical"]')
+      ?.setAttribute('href', canonicalUrl)
+    document
+      .querySelector('meta[property="og:url"]')
+      ?.setAttribute('content', canonicalUrl)
+    document
+      .querySelector('meta[name="robots"]')
+      ?.setAttribute(
+        'content',
+        isPublicPage ? 'index, follow' : 'noindex, nofollow'
+      )
+  }, [location.pathname])
 
   useEffect(() => {
     const previousIndex = NAVIGATION_ROUTES.indexOf(

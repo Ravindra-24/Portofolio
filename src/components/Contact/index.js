@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
 import SubmitModal from './SubmitModal'
+import { captureUtmParameters, UTM_KEYS } from '../../utils/utm'
 import './index.scss'
 
 const HADAPSAR_AREA_CENTER = [18.5089, 73.9365]
@@ -13,6 +14,7 @@ const Contact = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
   const [isLoading, setIsLoading] = useState(false)
   const [modalState, setModalState] = useState({ isOpen: false, isSuccess: false })
+  const [utmParameters] = useState(() => captureUtmParameters())
   const form = useRef()
 
   useEffect(() => {
@@ -66,6 +68,24 @@ const Contact = () => {
           </h1>
           <div className="contact-form">
             <form ref={form} onSubmit={sendEmail}>
+              {UTM_KEYS.map((key) => (
+                <input
+                  key={key}
+                  type="hidden"
+                  name={key}
+                  value={utmParameters[key] || ''}
+                />
+              ))}
+              <input
+                type="hidden"
+                name="landing_page"
+                value={utmParameters.landing_page || ''}
+              />
+              <input
+                type="hidden"
+                name="utm_captured_at"
+                value={utmParameters.captured_at || ''}
+              />
               <ul>
                 <li className="half">
                   <input placeholder="Name" type="text" name="name" required />
