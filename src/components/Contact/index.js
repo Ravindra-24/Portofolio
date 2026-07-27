@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import Loader from 'react-loaders'
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { Circle, MapContainer, TileLayer, Tooltip } from 'react-leaflet'
 import { useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
 import SubmitModal from './SubmitModal'
 import './index.scss'
+
+const HADAPSAR_AREA_CENTER = [18.5089, 73.9365]
 
 const Contact = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
@@ -115,11 +117,22 @@ const Contact = () => {
           <span style={{color:"#4FEFFF", fontSize:"16px"}}>ravindra.pawar.mit@gmail.com</span>
         </div>
         <div className="map-wrap">
-          <MapContainer center={[18.508948, 73.936464]} zoom={13}>
+          <MapContainer center={HADAPSAR_AREA_CENTER} zoom={12}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            <Marker position={[18.508948, 73.936464]}>
-              {/* <Popup>Sloba lives here, come over for a cup of coffee :)</Popup> */}
-            </Marker>
+            <Circle
+              center={HADAPSAR_AREA_CENTER}
+              radius={3000}
+              pathOptions={{
+                color: '#4FEFFF',
+                fillColor: '#4FEFFF',
+                fillOpacity: 0.16,
+                weight: 2,
+              }}
+            >
+              <Tooltip permanent direction="center" className="map-area-label">
+                Hadapsar area
+              </Tooltip>
+            </Circle>
           </MapContainer>
         </div>
       </div>

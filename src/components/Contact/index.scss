@@ -90,6 +90,13 @@
   animation-fill-mode: forwards;
 }
 
+.map-area-label {
+  background: #062b3f;
+  border: 1px solid #4FEFFF;
+  color: #fff;
+  font: 600 13px/1.2 'Helvetica Neue', sans-serif;
+}
+
 .info-map {
   position: absolute;
   background: #000;
