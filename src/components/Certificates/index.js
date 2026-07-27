@@ -6,6 +6,10 @@ import Modal from '../ImgViewer/Model'
 import { getDocs, collection } from 'firebase/firestore'
 import { db } from '../../firebase'
 import CertficateRenderer from './CertficateRenderer'
+import {
+  getMigrationStatus,
+  getPublicEntries,
+} from '../../services/portfolioRepository'
 
 const Certificates = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
@@ -32,6 +36,22 @@ const Certificates = () => {
 
   const getCertficate = async () => {
     try {
+      const migrated = await getMigrationStatus().catch(() => false)
+      if (migrated) {
+        const certificates = await getPublicEntries('certificates')
+        setWebCertificates(
+          certificates.filter((item) => item.category === 'full-stack')
+        )
+        setGoogleCertificates(
+          certificates.filter((item) => item.category === 'google')
+        )
+        setOtherCertificates(
+          certificates.filter((item) => item.category === 'other')
+        )
+        setFetchError('')
+        return
+      }
+
       const webCert = await getDocs(
         collection(db, 'Web Development Certificates')
       )

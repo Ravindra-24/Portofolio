@@ -141,6 +141,71 @@ The contact form uses **EmailJS** for email delivery without a backend server.
 - EmailJS public key is intentionally exposed (safe by design)
 - User authentication uses Google Sign-In via Google Cloud Console
 
+## 📝 Portfolio CMS Setup
+
+The protected `/dashboard` manages Home, About, Skills, Projects, Experience,
+Education, Certificates, and the downloadable CV. Public pages continue using
+the original content until the dashboard migration completes.
+
+### 1. Enable authentication
+
+In Firebase Console, open **Authentication → Sign-in method** and enable the
+Google provider. Add the deployed domain to **Authentication → Settings →
+Authorized domains**.
+
+### 2. Bootstrap the administrator
+
+1. Sign in at `/dashboard`.
+2. The access-denied page displays the signed-in Firebase UID.
+3. In Firestore Console, create a collection named `admins`.
+4. Create an empty document whose document ID is that exact UID.
+5. Sign out and sign back in.
+
+An authenticated Google account is not an administrator unless its UID exists
+in this collection.
+
+### 3. Deploy Firebase rules and indexes
+
+Authenticate the Firebase CLI and associate it with the Firebase project:
+
+```bash
+npx firebase login
+npx firebase use --add
+npx firebase deploy --only firestore:rules,firestore:indexes,storage
+```
+
+Wait for Firestore indexes to finish building before running the migration.
+The rules allow public reads of published portfolio records and restrict all
+content and file mutations to administrator UIDs.
+
+### 4. Import and verify existing content
+
+1. Open `/dashboard` as the administrator.
+2. Choose **Import existing portfolio**.
+3. Keep the page open while bundled project images upload.
+4. Verify each dashboard section and its public page.
+
+The importer uses deterministic IDs and can be safely retried. It creates
+`portfolioMeta/migration-v1` only in the final successful database batch; that
+marker switches the public site from its legacy sources to the CMS collections.
+
+### CMS media limits
+
+- Project and certificate images: JPEG, PNG, or WebP, maximum 5 MB.
+- CV: PDF, maximum 10 MB.
+- New uploads are stored below `portfolio/{section}/{documentId}`.
+
+### CMS tests
+
+```bash
+npm run test:ci
+npm run test:rules
+npm run build
+```
+
+The rules test requires Java because the Firebase Firestore emulator runs on
+the JVM.
+
 ## 📱 Responsive Breakpoints
 
 - **Mobile:** < 768px
@@ -217,4 +282,3 @@ I'm a **Software Developer** at PRIC Technology Private Limited with expertise i
 - [Email](mailto:ravindra.pawar.mit@gmail.com)
 
 ---
-

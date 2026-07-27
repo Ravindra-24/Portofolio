@@ -38,7 +38,7 @@ const CertficateRenderer = ({
         </h2>
         {webCertificates.map((pdf) => (
           <div key={pdf.id} className="image-box">
-            <img src={pdf.image} alt={pdf.name} className="portfolio-image" />
+            <img src={pdf.imageUrl || pdf.image} alt={pdf.name} className="portfolio-image" />
             <div className="content">
               <p className="title">{pdf.name}</p>
               <h4 className="description">{pdf.description}</h4>
@@ -59,7 +59,7 @@ const CertficateRenderer = ({
         </h2>
         {googleCertificates.map((pdf) => (
           <div key={pdf.id} className="image-box">
-            <img src={pdf.image} alt={pdf.name} className="portfolio-image" />
+            <img src={pdf.imageUrl || pdf.image} alt={pdf.name} className="portfolio-image" />
             <div className="content">
             <p className="title">{pdf.name}</p>
               <h4 className="description">{pdf.description}</h4>
@@ -80,7 +80,7 @@ const CertficateRenderer = ({
         </h2>
         {otherCertificates.map((pdf) => (
           <div key={pdf.id} className="image-box">
-            <img src={pdf.image} alt={pdf.name} className="portfolio-image" />
+            <img src={pdf.imageUrl || pdf.image} alt={pdf.name} className="portfolio-image" />
             <div className="content">
             <p className="title">{pdf.name}</p>
               <h4 className="description">{pdf.description}</h4>

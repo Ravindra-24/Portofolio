@@ -1,28 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './Skills.scss'
 import AnimatedLetters from '../AnimatedLetters'
 import Loader from 'react-loaders'
 import TagCloud from 'TagCloud'
+import {
+  DEFAULT_SKILLS,
+} from '../../data/portfolioDefaults'
+import {
+  usePortfolioCollection,
+  useSiteContent,
+} from '../../hooks/usePortfolioData'
 
 const container = '.content'
-const texts = [
-  'ReactJS',
-  'NextJS',
-  'JavaScript',
-  'CSS3',
-  'Html',
-  'NodeJS',
-  'ExpressJS',
-  'MongoDB',
-  'Redux',
-  'Firebase',
-  'jwt',
-  'Babel',
-  'Webpack',
-  'aws ec2',
-  'CI/CD pipeline',
-  'aws s3',
-]
 const options = {
   radius: 300,
   // animation speed
@@ -39,6 +28,15 @@ const options = {
 
 const Skills = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
+  const { data: skillEntries } = usePortfolioCollection(
+    'skills',
+    DEFAULT_SKILLS
+  )
+  const { content, error } = useSiteContent()
+  const texts = useMemo(
+    () => skillEntries.map((skill) => skill.name),
+    [skillEntries]
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -51,8 +49,16 @@ const Skills = () => {
   }, [])
 
   useEffect(() => {
-    TagCloud(container, texts, options)
-  },[])
+    if (!texts.length) return undefined
+    const tagCloud = TagCloud(container, texts, options)
+    return () => {
+      if (Array.isArray(tagCloud)) {
+        tagCloud.forEach((instance) => instance?.destroy?.())
+      } else {
+        tagCloud?.destroy?.()
+      }
+    }
+  }, [texts])
 
   return (
     <>
@@ -65,15 +71,15 @@ const Skills = () => {
               idx={15}
             />
           </h1>
-          <p>
-            I have strong front-end skills with <span className="font-bold">HTML, CSS</span>, and <span className="font-bold">JavaScript</span>, and extensive experience building interfaces with <span className="font-bold">React</span> and <span className="font-bold">Redux</span>. I build full-stack applications using the <span className="font-bold">MERN stack</span> and <span className="font-bold">Next.js</span>, and work with <span className="font-bold">Firebase</span> (Auth, Firestore, Storage) and <span className="font-bold">Google Cloud Functions</span> on the backend. I also use <span className="font-bold">Tailwind CSS</span> and <span className="font-bold">React-Bootstrap</span> for UI, and follow CI/CD and testing practices to ensure reliability.
-          </p>
+          {(content.skills?.paragraphs || []).map((paragraph, index) => (
+            <p key={index} align={index ? 'LEFT' : undefined}>
+              {paragraph}
+            </p>
+          ))}
           <p align="LEFT">
-            At PRIC Technology I implemented many product features including booking pages, account management, Sessions, Events, Courses, ticket transfers and editable responses, Telegram group subscriptions, and real-time analytics dashboards. I also developed an Event QR Scanning System with instant analytics and activity-based ticket validation. I focused on performance, security, and usability.
+            Visit my <span><a className="font-bold" style={{textDecoration: "underline"}} href={content.social?.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a></span> profile, or check my <span><a className="font-bold" style={{textDecoration: "underline"}} href={content.social?.githubUrl} target="_blank" rel="noreferrer">GitHub</a></span> for projects and code samples.
           </p>
-          <p align="LEFT">
-            Visit my <span><a className="font-bold" style={{textDecoration: "underline"}} href="https://www.linkedin.com/in/ravindra-shrimant-pawar/" target="_blank" rel="noreferrer">LinkedIn</a></span> profile, or check my <span><a className="font-bold" style={{textDecoration: "underline"}} href="https://github.com/Ravindra-24" target="_blank" rel="noreferrer">GitHub</a></span> for projects and code samples.
-          </p>
+          {error && <p>{error}</p>}
         </div>
         <div className="skills-container">
           <span className="content content-skills"></span>

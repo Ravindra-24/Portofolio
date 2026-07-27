@@ -7,43 +7,44 @@ import Logo from './Logo'
 import { getDocs, collection } from 'firebase/firestore'
 import { db } from '../../firebase'
 import './index.scss'
+import { useSiteContent } from '../../hooks/usePortfolioData'
 
 const Home = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
   const [selectedPDF, setSelectedPDF] = useState('')
   const [cvError, setCvError] = useState('')
+  const { content, migrated, loading, error } = useSiteContent()
 
-  const nameArray = ['a', 'v', 'i', 'n', 'd', 'r', 'a']
-  const jobArray = [
-    'w',
-    'e',
-    'b',
-    ' ',
-    'd',
-    'e',
-    'v',
-    'e',
-    'l',
-    'o',
-    'p',
-    'e',
-    'r',
-    '.',
-  ]
+  const displayName = content.home?.name || 'Ravindra'
+  const usesLogoInitial = displayName.toLowerCase().startsWith('r')
+  const nameArray = (usesLogoInitial ? displayName.slice(1) : displayName).split('')
+  const jobArray = (content.home?.role || 'web developer.').split('')
+  const finalLetterIndex = Math.max(
+    14,
+    15 + nameArray.length - 1,
+    22 + jobArray.length - 1
+  )
 
   useEffect(() => {
+    setLetterClass('text-animate')
     const timer = setTimeout(() => {
       setLetterClass('text-animate-hover')
-    }, 4000)
+    }, (finalLetterIndex / 10 + 1) * 1000)
 
     return () => {
       clearTimeout(timer)
     }
-  }, [])
+  }, [finalLetterIndex])
 
   useEffect(() => {
-    getCV()
-  }, [])
+    if (loading) return
+    if (migrated) {
+      setSelectedPDF(content.cv?.fileUrl || '')
+      setCvError(error)
+    } else {
+      getCV()
+    }
+  }, [content.cv?.fileUrl, error, loading, migrated])
 
   const getCV = async () => {
     try {
@@ -66,10 +67,12 @@ const Home = () => {
             <br />
             <span className={`${letterClass} _13`}>I</span>
             <span className={`${letterClass} _14`}>'m</span>
-            <img
-              src={LogoTitle}
-              alt="JavaScript Developer Name, Web Developer Name"
-            />
+            {usesLogoInitial && (
+              <img
+                src={LogoTitle}
+                alt=""
+              />
+            )}
             <AnimatedLetters
               letterClass={letterClass}
               strArray={nameArray}
@@ -82,7 +85,7 @@ const Home = () => {
               idx={22}
             />
           </h1>
-          <h2>Front-End Development / React.JS / MERN-Stack</h2>
+          <h2>{content.home?.tagline}</h2>
           <div className="btns">
             <Link to="/contact" className="flat-button">
               CONTACT ME

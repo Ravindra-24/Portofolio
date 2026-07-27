@@ -15,6 +15,8 @@ const NAVIGATION_ROUTES = [
 
 const NAVIGATION_COOLDOWN_MS = 700
 const MIN_WHEEL_DELTA = 35
+const WHEEL_NAVIGATION_THRESHOLD = 240
+const WHEEL_GESTURE_RESET_MS = 450
 const MIN_TOUCH_SWIPE_DELTA = 60
 const NAVIGATION_HINT_STORAGE_KEY = 'route_navigation_hint_dismissed'
 
@@ -23,8 +25,9 @@ const normalizePath = (path) => {
   return path !== '/' && path.endsWith('/') ? path.slice(0, -1) : path
 }
 
-const isScrollableInDirection = (element, deltaY) => {
+const getScrollState = (element, deltaY) => {
   let node = element
+  let firstScrollable = null
 
   while (node && node !== document.body) {
     if (node instanceof HTMLElement) {
@@ -34,12 +37,13 @@ const isScrollableInDirection = (element, deltaY) => {
         node.scrollHeight > node.clientHeight + 1
 
       if (isScrollable) {
+        firstScrollable ||= node
         const hasRoomBelow =
           node.scrollTop + node.clientHeight < node.scrollHeight - 1
         const hasRoomAbove = node.scrollTop > 1
 
         if ((deltaY > 0 && hasRoomBelow) || (deltaY < 0 && hasRoomAbove)) {
-          return true
+          return { container: node, canScroll: true }
         }
       }
     }
@@ -47,14 +51,20 @@ const isScrollableInDirection = (element, deltaY) => {
     node = node.parentElement
   }
 
-  return false
+  return { container: firstScrollable, canScroll: false }
 }
+
+const isScrollableInDirection = (element, deltaY) =>
+  getScrollState(element, deltaY).canScroll
 
 const Layout = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const previousPathRef = useRef(location.pathname)
   const lastNavigationAtRef = useRef(0)
+  const accumulatedWheelDeltaRef = useRef(0)
+  const lastWheelEventAtRef = useRef(0)
+  const activeScrollContainerRef = useRef(null)
   const touchStartYRef = useRef(null)
   const touchStartTargetRef = useRef(null)
   const [transitionDirection, setTransitionDirection] = useState(1)
@@ -106,7 +116,12 @@ const Layout = () => {
     const handleWheel = (event) => {
       if (window.matchMedia('(pointer: coarse)').matches) return
 
-      const deltaY = event.deltaY
+      const deltaY =
+        event.deltaMode === 1
+          ? event.deltaY * 16
+          : event.deltaMode === 2
+            ? event.deltaY * window.innerHeight
+            : event.deltaY
       if (Math.abs(deltaY) < MIN_WHEEL_DELTA) return
 
       const target = event.target
@@ -124,7 +139,45 @@ const Layout = () => {
         return
       }
 
-      if (isScrollableInDirection(target, deltaY)) {
+      const now = Date.now()
+      const scrollState = getScrollState(target, deltaY)
+
+      if (scrollState.canScroll) {
+        accumulatedWheelDeltaRef.current = 0
+        lastWheelEventAtRef.current = now
+        activeScrollContainerRef.current = scrollState.container
+        return
+      }
+
+      const continuingGestureAtBoundary =
+        scrollState.container &&
+        activeScrollContainerRef.current === scrollState.container &&
+        now - lastWheelEventAtRef.current < WHEEL_GESTURE_RESET_MS
+
+      if (continuingGestureAtBoundary) {
+        accumulatedWheelDeltaRef.current = 0
+        lastWheelEventAtRef.current = now
+        return
+      }
+
+      const gestureExpired =
+        now - lastWheelEventAtRef.current >= WHEEL_GESTURE_RESET_MS
+      const changedDirection =
+        accumulatedWheelDeltaRef.current !== 0 &&
+        Math.sign(accumulatedWheelDeltaRef.current) !== Math.sign(deltaY)
+
+      if (gestureExpired || changedDirection) {
+        accumulatedWheelDeltaRef.current = 0
+      }
+
+      lastWheelEventAtRef.current = now
+      activeScrollContainerRef.current = null
+      accumulatedWheelDeltaRef.current += deltaY
+
+      if (
+        Math.abs(accumulatedWheelDeltaRef.current) <
+        WHEEL_NAVIGATION_THRESHOLD
+      ) {
         return
       }
 
@@ -132,15 +185,18 @@ const Layout = () => {
       const currentIndex = NAVIGATION_ROUTES.indexOf(currentPath)
       if (currentIndex === -1) return
 
-      const now = Date.now()
-      if (now - lastNavigationAtRef.current < NAVIGATION_COOLDOWN_MS) return
+      if (now - lastNavigationAtRef.current < NAVIGATION_COOLDOWN_MS) {
+        accumulatedWheelDeltaRef.current = 0
+        return
+      }
 
-      const direction = deltaY > 0 ? 1 : -1
+      const direction = accumulatedWheelDeltaRef.current > 0 ? 1 : -1
       const nextIndex = currentIndex + direction
 
       if (nextIndex < 0 || nextIndex >= NAVIGATION_ROUTES.length) return
 
       event.preventDefault()
+      accumulatedWheelDeltaRef.current = 0
       lastNavigationAtRef.current = now
       setTransitionDirection(direction)
       navigate(NAVIGATION_ROUTES[nextIndex])

@@ -2,13 +2,18 @@ import './index.scss'
 import { useState, useEffect } from 'react'
 import AnimatedLetters from '../AnimatedLetters'
 import Loader from 'react-loaders'
-import experienceData from './data'
+import { DEFAULT_EXPERIENCE } from '../../data/portfolioDefaults'
+import { usePortfolioCollection } from '../../hooks/usePortfolioData'
 
 // const CV_URL =
 //   'https://firebasestorage.googleapis.com/v0/b/assignment-6e254.appspot.com/o/CV%2FRavindra_Pawar_7887975721.pdf?alt=media&token=3a752885-9754-45eb-9fe1-8aaaf07c5e57'
 
 const Experience = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
+  const { data: experienceData, error } = usePortfolioCollection(
+    'experience',
+    DEFAULT_EXPERIENCE
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -45,7 +50,10 @@ const Experience = () => {
                 <h3 className="role">{item.title}</h3>
                 <span className="company">@ {item.company}</span>
               </div>
-              <div className="meta">{item.startEnd} • {item.location}</div>
+              <div className="meta">
+                {item.period || item.startEnd}
+                {item.location ? ` • ${item.location}` : ''}
+              </div>
               <ul className="bullets">
                 {item.bullets.map((b, i) => (
                   <li key={i}>{b}</li>
@@ -55,6 +63,7 @@ const Experience = () => {
           </div>
         ))}
       </div>
+      {error && <p>{error}</p>}
       </div>
       <Loader type="pacman" />
     </>

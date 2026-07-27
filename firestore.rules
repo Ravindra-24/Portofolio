@@ -1,0 +1,99 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function validCommonFields() {
+      return request.resource.data.published is bool
+        && request.resource.data.order is int
+        && request.resource.data.order >= 0;
+    }
+
+    match /admins/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+
+    match /siteContent/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /portfolioMeta/{documentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /skills/{documentId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin()
+        && validCommonFields()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 60;
+      allow delete: if isAdmin();
+    }
+
+    match /projects/{documentId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin()
+        && validCommonFields()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.description is string
+        && request.resource.data.description.size() <= 2000
+        && request.resource.data.skills is list
+        && request.resource.data.skills.size() <= 20;
+      allow delete: if isAdmin();
+    }
+
+    match /experience/{documentId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin()
+        && validCommonFields()
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 120
+        && request.resource.data.bullets is list
+        && request.resource.data.bullets.size() <= 10;
+      allow delete: if isAdmin();
+    }
+
+    match /education/{documentId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin()
+        && validCommonFields()
+        && request.resource.data.institution is string
+        && request.resource.data.institution.size() > 0
+        && request.resource.data.institution.size() <= 120;
+      allow delete: if isAdmin();
+    }
+
+    match /certificates/{documentId} {
+      allow read: if isAdmin() || resource.data.published == true;
+      allow create, update: if isAdmin()
+        && validCommonFields()
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.category in ['full-stack', 'google', 'other'];
+      allow delete: if isAdmin();
+    }
+
+    // Kept readable during the v1 migration. All new writes use the schema above.
+    match /{legacyCollection}/{documentId} {
+      allow read: if legacyCollection in [
+        'Web Development Certificates',
+        'Google Certificates',
+        'Other Certificates',
+        'CV'
+      ];
+      allow write: if false;
+    }
+  }
+}

@@ -18,9 +18,11 @@ import {
   faBriefcase,
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
+import { useSiteContent } from '../../hooks/usePortfolioData'
 
 const Sidebar = () => {
   const [showNav, setShowNav] = useState(false)
+  const { content } = useSiteContent()
   const navLinkClass = ({ isActive }) => (isActive ? 'active' : '')
   const navLinkWithBaseClass = (baseClass) => ({ isActive }) =>
     `${baseClass}${isActive ? ' active' : ''}`
@@ -95,7 +97,7 @@ const Sidebar = () => {
       <ul>
         <li>
           <a
-            href="https://www.linkedin.com/in/ravindra-shrimant-pawar/"
+            href={content.social?.linkedinUrl}
             target="_blank"
             rel="noreferrer"
           >
@@ -108,7 +110,7 @@ const Sidebar = () => {
         </li>
         <li>
           <a
-            href="https://github.com/Ravindra-24"
+            href={content.social?.githubUrl}
             target="_blank"
             rel="noreferrer"
           >

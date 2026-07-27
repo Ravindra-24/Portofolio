@@ -30,7 +30,7 @@ export default function Modal({ modal, setModal, pdfUrl, setSelectedPDF }) {
               </button>
             </div>
             <div className="modal-body">
-              <img src={pdfUrl.image} alt={pdfUrl.name} />
+              <img src={pdfUrl.imageUrl || pdfUrl.image} alt={pdfUrl.name} />
             </div>
           </div>
         </div>

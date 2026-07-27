@@ -2,10 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Education.scss';
 import AnimatedLetters from '../AnimatedLetters';
 import Loader from 'react-loaders';
+import { DEFAULT_EDUCATION } from '../../data/portfolioDefaults';
+import { usePortfolioCollection } from '../../hooks/usePortfolioData';
 
 const Education = () => {
 
     const [letterClass, setLetterClass] = useState('text-animate')
+    const { data: educationData, error } = usePortfolioCollection(
+      'education',
+      DEFAULT_EDUCATION
+    )
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,22 +22,6 @@ const Education = () => {
       clearTimeout(timer)
     }
   }, [])
-
-
-    const educationData = [
-        {
-            id: 1,
-            institution: 'G. S. Mandal Maharashtra Institute of Technology, Chh. Sambhajinagar',
-            degree: 'Bachelor of Technology in Computer Science and Engineering',
-            dates: '2020 - 2023',
-        },
-        {
-            id: 2,
-            institution: 'Government Polytechnic, Jalna',
-            degree: 'Diploma in Computer Engineering',
-            dates: '2017 - 2020',
-        },
-    ];
 
     return (
         <>
@@ -54,6 +44,7 @@ const Education = () => {
                 ))}
             </div>
         </div>
+        {error && <p>{error}</p>}
         </div>
         <Loader type="pacman" />
         </>
