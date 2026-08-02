@@ -13,6 +13,49 @@ service cloud.firestore {
         && request.resource.data.order >= 0;
     }
 
+    function optionalString(data, field, maxSize) {
+      return !data.keys().hasAny([field])
+        || (data[field] is string && data[field].size() <= maxSize);
+    }
+
+    function validContactFields(contact) {
+      return (
+        contact is map
+        && contact.keys().hasAll([
+          'displayName',
+          'email',
+          'location',
+          'portfolioUrl',
+          'mapLatitude',
+          'mapLongitude'
+        ])
+        && contact.displayName is string
+        && contact.displayName.size() > 0
+        && contact.displayName.size() <= 120
+        && contact.email is string
+        && contact.email.size() <= 254
+        && contact.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && optionalString(contact, 'phone', 40)
+        && contact.location is string
+        && contact.location.size() > 0
+        && contact.location.size() <= 240
+        && contact.portfolioUrl is string
+        && contact.portfolioUrl.size() <= 2048
+        && contact.portfolioUrl.matches('^https?://.+')
+        && contact.mapLatitude is number
+        && contact.mapLatitude >= -90
+        && contact.mapLatitude <= 90
+        && contact.mapLongitude is number
+        && contact.mapLongitude >= -180
+        && contact.mapLongitude <= 180
+      );
+    }
+
+    function validContact() {
+      return !request.resource.data.keys().hasAny(['contact'])
+        || validContactFields(request.resource.data.contact);
+    }
+
     match /admins/{uid} {
       allow get: if request.auth != null && request.auth.uid == uid;
       allow list, create, update, delete: if false;
@@ -20,7 +63,7 @@ service cloud.firestore {
 
     match /siteContent/{documentId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if isAdmin() && validContact();
     }
 
     match /portfolioMeta/{documentId} {
@@ -34,7 +77,14 @@ service cloud.firestore {
         && validCommonFields()
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0
-        && request.resource.data.name.size() <= 60;
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.category in [
+          'frontend',
+          'backend',
+          'databases-cloud',
+          'mobile-testing-tools',
+          'other'
+        ];
       allow delete: if isAdmin();
     }
 
@@ -48,7 +98,9 @@ service cloud.firestore {
         && request.resource.data.description is string
         && request.resource.data.description.size() <= 2000
         && request.resource.data.skills is list
-        && request.resource.data.skills.size() <= 20;
+        && request.resource.data.skills.size() <= 20
+        && optionalString(request.resource.data, 'role', 120)
+        && optionalString(request.resource.data, 'period', 120);
       allow delete: if isAdmin();
     }
 
@@ -60,7 +112,8 @@ service cloud.firestore {
         && request.resource.data.title.size() > 0
         && request.resource.data.title.size() <= 120
         && request.resource.data.bullets is list
-        && request.resource.data.bullets.size() <= 10;
+        && request.resource.data.bullets.size() <= 10
+        && optionalString(request.resource.data, 'leavingReason', 500);
       allow delete: if isAdmin();
     }
 
@@ -70,7 +123,8 @@ service cloud.firestore {
         && validCommonFields()
         && request.resource.data.institution is string
         && request.resource.data.institution.size() > 0
-        && request.resource.data.institution.size() <= 120;
+        && request.resource.data.institution.size() <= 120
+        && optionalString(request.resource.data, 'grade', 80);
       allow delete: if isAdmin();
     }
 

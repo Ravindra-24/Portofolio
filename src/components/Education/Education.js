@@ -40,6 +40,7 @@ const Education = () => {
                         <h2>{education.institution}</h2>
                         <p>{education.degree}</p>
                         <p>{education.dates}</p>
+                        {education.grade && <p className="grade">{education.grade}</p>}
                     </div>
                 ))}
             </div>

@@ -54,6 +54,28 @@
         }
       }
 
+      .project-image-placeholder {
+        align-items: center;
+        background: radial-gradient(circle at top, #16445a, #071d29 70%);
+        color: #4fefff;
+        display: flex;
+        flex-direction: column;
+        height: 200px;
+        justify-content: center;
+
+        span {
+          font-family: 'Coolvetica', sans-serif;
+          font-size: 72px;
+          line-height: 1;
+        }
+
+        small {
+          font-size: 9px;
+          letter-spacing: 3px;
+          margin-top: 8px;
+        }
+      }
+
       h2 {
         font-size: 24px;
         font-weight: 500;
@@ -78,6 +100,22 @@
         font-family: cursive;
         color: #4FEFFF;
         margin: 0 20px 10px;
+      }
+
+      .project-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 14px;
+        margin: 0 20px 10px;
+
+        span {
+          color: #b8c9d2;
+          font-size: 11px;
+        }
+      }
+
+      p.project-description {
+        margin-bottom: 90px;
       }
 
       a.card-btn {

@@ -36,14 +36,31 @@ const Projects = () => {
         <div className="projects-container">
           {projects.map((project) => (
             <div className="project-card" key={project.id}>
-              <img src={project.imageUrl || project.image} alt={project.name} />
+              {project.imageUrl || project.image ? (
+                <img src={project.imageUrl || project.image} alt={project.name} />
+              ) : (
+                <div
+                  className="project-image-placeholder"
+                  role="img"
+                  aria-label={`${project.name} project preview placeholder`}
+                >
+                  <span>R</span>
+                  <small>PROJECT PREVIEW</small>
+                </div>
+              )}
               <h2>{project.name}</h2>
+              {(project.role || project.period) && (
+                <div className="project-meta">
+                  {project.role && <span>{project.role}</span>}
+                  {project.period && <span>{project.period}</span>}
+                </div>
+              )}
               <p className="skill-tag">
                 {Array.isArray(project.skills)
                   ? project.skills.join(', ')
                   : project.skills}
               </p>
-              <p>{project.description}</p>
+              <p className="project-description">{project.description}</p>
               {(project.githubUrl || project.github) && (
                 <a
                   className="card-btn"

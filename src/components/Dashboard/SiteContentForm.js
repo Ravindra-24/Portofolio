@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { isHttpUrl, validatePdf } from './validation'
+import {
+  isCoordinateInRange,
+  isEmail,
+  isHttpUrl,
+  validatePdf,
+} from './validation'
 
 const SiteContentForm = ({
   section,
@@ -22,6 +27,8 @@ const SiteContentForm = ({
       setDraft({ paragraphs: content.about?.paragraphs?.join('\n\n') || '' })
     } else if (section === 'skills') {
       setDraft({ paragraphs: content.skills?.paragraphs?.join('\n\n') || '' })
+    } else if (section === 'contact') {
+      setDraft({ ...content.contact })
     } else {
       setDraft({ file: null })
     }
@@ -59,6 +66,26 @@ const SiteContentForm = ({
       if (!paragraphs.length) nextErrors.paragraphs = 'Add at least one paragraph.'
       if (paragraphs.some((value) => value.length > 4000)) {
         nextErrors.paragraphs = 'Each paragraph must be 4,000 characters or fewer.'
+      }
+    }
+
+    if (section === 'contact') {
+      if (!draft.displayName?.trim()) {
+        nextErrors.displayName = 'Display name is required.'
+      }
+      if (!isEmail(draft.email)) nextErrors.email = 'Enter a valid email address.'
+      if (!draft.location?.trim()) nextErrors.location = 'Location is required.'
+      if (!draft.portfolioUrl?.trim() || !isHttpUrl(draft.portfolioUrl)) {
+        nextErrors.portfolioUrl = 'Enter a valid HTTP or HTTPS URL.'
+      }
+      if (!isCoordinateInRange(draft.mapLatitude, -90, 90)) {
+        nextErrors.mapLatitude = 'Latitude must be between -90 and 90.'
+      }
+      if (!isCoordinateInRange(draft.mapLongitude, -180, 180)) {
+        nextErrors.mapLongitude = 'Longitude must be between -180 and 180.'
+      }
+      if ((draft.phone || '').trim().length > 40) {
+        nextErrors.phone = 'Phone number must be 40 characters or fewer.'
       }
     }
 
@@ -157,6 +184,96 @@ const SiteContentForm = ({
             <span className="field-error">{errors.paragraphs}</span>
           )}
         </label>
+      )}
+
+      {section === 'contact' && (
+        <>
+          <div className="cms-field-grid">
+            <label>
+              Display name
+              <input
+                maxLength="120"
+                value={draft.displayName || ''}
+                onChange={(event) => update('displayName', event.target.value)}
+              />
+              {errors.displayName && (
+                <span className="field-error">{errors.displayName}</span>
+              )}
+            </label>
+            <label>
+              Email
+              <input
+                type="email"
+                maxLength="254"
+                value={draft.email || ''}
+                onChange={(event) => update('email', event.target.value)}
+              />
+              {errors.email && <span className="field-error">{errors.email}</span>}
+            </label>
+            <label>
+              Phone (optional)
+              <input
+                type="tel"
+                maxLength="40"
+                value={draft.phone || ''}
+                onChange={(event) => update('phone', event.target.value)}
+              />
+              {errors.phone && <span className="field-error">{errors.phone}</span>}
+            </label>
+            <label>
+              Portfolio URL
+              <input
+                type="url"
+                value={draft.portfolioUrl || ''}
+                onChange={(event) => update('portfolioUrl', event.target.value)}
+              />
+              {errors.portfolioUrl && (
+                <span className="field-error">{errors.portfolioUrl}</span>
+              )}
+            </label>
+          </div>
+          <label>
+            Location
+            <input
+              maxLength="240"
+              value={draft.location || ''}
+              onChange={(event) => update('location', event.target.value)}
+            />
+            {errors.location && (
+              <span className="field-error">{errors.location}</span>
+            )}
+          </label>
+          <div className="cms-field-grid">
+            <label>
+              Map latitude
+              <input
+                type="number"
+                min="-90"
+                max="90"
+                step="any"
+                value={draft.mapLatitude ?? ''}
+                onChange={(event) => update('mapLatitude', event.target.value)}
+              />
+              {errors.mapLatitude && (
+                <span className="field-error">{errors.mapLatitude}</span>
+              )}
+            </label>
+            <label>
+              Map longitude
+              <input
+                type="number"
+                min="-180"
+                max="180"
+                step="any"
+                value={draft.mapLongitude ?? ''}
+                onChange={(event) => update('mapLongitude', event.target.value)}
+              />
+              {errors.mapLongitude && (
+                <span className="field-error">{errors.mapLongitude}</span>
+              )}
+            </label>
+          </div>
+        </>
       )}
 
       {section === 'cv' && (

@@ -16,6 +16,7 @@ import {
   faFile,
   faGear,
   faBriefcase,
+  faGraduationCap,
 } from '@fortawesome/free-solid-svg-icons'
 import { Link, NavLink } from 'react-router-dom'
 import { useSiteContent } from '../../hooks/usePortfolioData'
@@ -56,6 +57,13 @@ const Sidebar = () => {
           onClick={() => setShowNav(false)}
         >
           <FontAwesomeIcon icon={faBriefcase} className='anchor-icon' />
+        </NavLink>
+        <NavLink
+          className={navLinkWithBaseClass('education-link')}
+          to="/education"
+          onClick={() => setShowNav(false)}
+        >
+          <FontAwesomeIcon icon={faGraduationCap} className='anchor-icon' />
         </NavLink>
         <NavLink
           className={navLinkWithBaseClass('skills-link')}

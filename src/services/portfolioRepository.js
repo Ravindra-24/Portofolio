@@ -26,6 +26,7 @@ import {
   DEFAULT_PROJECTS,
   DEFAULT_SITE_CONTENT,
   DEFAULT_SKILLS,
+  mergeSiteContentDefaults,
 } from '../data/portfolioDefaults'
 
 export const ENTRY_SECTIONS = [
@@ -49,7 +50,8 @@ export const getMigrationStatus = async () => {
 
 export const getSiteContent = async () => {
   const snapshot = await getDoc(SITE_CONTENT_REF)
-  return snapshot.exists() ? snapshot.data() : DEFAULT_SITE_CONTENT
+  const stored = snapshot.exists() ? snapshot.data() : {}
+  return mergeSiteContentDefaults(stored)
 }
 
 export const getPublicEntries = async (section) => {

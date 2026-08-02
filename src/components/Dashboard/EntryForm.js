@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { validateEntry } from './validation'
+import { SKILL_CATEGORY_OPTIONS } from '../../data/portfolioDefaults'
 
 const emptyDraft = (section) => {
   const common = { published: true, file: null }
-  if (section === 'skills') return { ...common, name: '' }
+  if (section === 'skills') return { ...common, name: '', category: 'other' }
   if (section === 'projects') {
     return {
       ...common,
       name: '',
       description: '',
+      role: '',
+      period: '',
       skillsText: '',
       websiteUrl: '',
       githubUrl: '',
@@ -21,11 +24,12 @@ const emptyDraft = (section) => {
       company: '',
       period: '',
       location: '',
+      leavingReason: '',
       bulletsText: '',
     }
   }
   if (section === 'education') {
-    return { ...common, institution: '', degree: '', dates: '' }
+    return { ...common, institution: '', degree: '', dates: '', grade: '' }
   }
   return {
     ...common,
@@ -144,15 +148,31 @@ const EntryForm = ({
       </div>
 
       {section === 'skills' && (
-        <label>
-          Skill name
-          <input
-            maxLength="60"
-            value={values.name}
-            onChange={(event) => update('name', event.target.value)}
-          />
-          <FieldError>{errors.name}</FieldError>
-        </label>
+        <>
+          <label>
+            Skill name
+            <input
+              maxLength="60"
+              value={values.name}
+              onChange={(event) => update('name', event.target.value)}
+            />
+            <FieldError>{errors.name}</FieldError>
+          </label>
+          <label>
+            Category
+            <select
+              value={values.category}
+              onChange={(event) => update('category', event.target.value)}
+            >
+              {SKILL_CATEGORY_OPTIONS.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+            <FieldError>{errors.category}</FieldError>
+          </label>
+        </>
       )}
 
       {section === 'projects' && (
@@ -176,6 +196,28 @@ const EntryForm = ({
             />
             <FieldError>{errors.description}</FieldError>
           </label>
+          <div className="cms-field-grid">
+            <label>
+              Project role (optional)
+              <input
+                maxLength="120"
+                placeholder="Solo Full-Stack Developer"
+                value={values.role}
+                onChange={(event) => update('role', event.target.value)}
+              />
+              <FieldError>{errors.role}</FieldError>
+            </label>
+            <label>
+              Project period (optional)
+              <input
+                maxLength="120"
+                placeholder="Jun 2026 - Present"
+                value={values.period}
+                onChange={(event) => update('period', event.target.value)}
+              />
+              <FieldError>{errors.period}</FieldError>
+            </label>
+          </div>
           <label>
             Skills (comma separated)
             <input
@@ -256,6 +298,16 @@ const EntryForm = ({
             />
             <FieldError>{errors.bullets}</FieldError>
           </label>
+          <label>
+            Reason for leaving (optional, shown publicly when filled)
+            <textarea
+              maxLength="500"
+              rows="3"
+              value={values.leavingReason}
+              onChange={(event) => update('leavingReason', event.target.value)}
+            />
+            <FieldError>{errors.leavingReason}</FieldError>
+          </label>
         </>
       )}
 
@@ -288,6 +340,16 @@ const EntryForm = ({
               onChange={(event) => update('dates', event.target.value)}
             />
             <FieldError>{errors.dates}</FieldError>
+          </label>
+          <label>
+            Grade / score (optional)
+            <input
+              maxLength="80"
+              placeholder="CGPA: 8.65/10"
+              value={values.grade}
+              onChange={(event) => update('grade', event.target.value)}
+            />
+            <FieldError>{errors.grade}</FieldError>
           </label>
         </>
       )}
@@ -329,7 +391,11 @@ const EntryForm = ({
 
       {(section === 'projects' || section === 'certificates') && (
         <label>
-          {item?.imageUrl ? 'Replace image' : 'Image'}
+          {item?.imageUrl
+            ? 'Replace image'
+            : section === 'projects'
+            ? 'Image (optional)'
+            : 'Image'}
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"

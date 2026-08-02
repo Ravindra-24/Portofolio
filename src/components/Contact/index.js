@@ -5,17 +5,24 @@ import { useRef } from 'react'
 import emailjs from '@emailjs/browser'
 import AnimatedLetters from '../AnimatedLetters'
 import SubmitModal from './SubmitModal'
-import { captureUtmParameters, UTM_KEYS } from '../../utils/utm'
+import { useSiteContent } from '../../hooks/usePortfolioData'
 import './index.scss'
 
-const HADAPSAR_AREA_CENTER = [18.5089, 73.9365]
+const DEFAULT_MAP_CENTER = [18.5089, 73.9365]
 
 const Contact = () => {
   const [letterClass, setLetterClass] = useState('text-animate')
   const [isLoading, setIsLoading] = useState(false)
   const [modalState, setModalState] = useState({ isOpen: false, isSuccess: false })
-  const [utmParameters] = useState(() => captureUtmParameters())
   const form = useRef()
+  const { content, error: contentError } = useSiteContent()
+  const contact = content.contact || {}
+  const latitude = Number(contact.mapLatitude)
+  const longitude = Number(contact.mapLongitude)
+  const mapCenter =
+    Number.isFinite(latitude) && Number.isFinite(longitude)
+      ? [latitude, longitude]
+      : DEFAULT_MAP_CENTER
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,24 +75,6 @@ const Contact = () => {
           </h1>
           <div className="contact-form">
             <form ref={form} onSubmit={sendEmail}>
-              {UTM_KEYS.map((key) => (
-                <input
-                  key={key}
-                  type="hidden"
-                  name={key}
-                  value={utmParameters[key] || ''}
-                />
-              ))}
-              <input
-                type="hidden"
-                name="landing_page"
-                value={utmParameters.landing_page || ''}
-              />
-              <input
-                type="hidden"
-                name="utm_captured_at"
-                value={utmParameters.captured_at || ''}
-              />
               <ul>
                 <li className="half">
                   <input placeholder="Name" type="text" name="name" required />
@@ -126,21 +115,20 @@ const Contact = () => {
           </div>
         </div>
         <div className="info-map">
-          Ravindra Pawar,
-          <br />
-          Hadapsar, Pune,
-          <br />
-          Maharashtra, India.
-           <br />
-           
-          <br />
-          <span style={{color:"#4FEFFF", fontSize:"16px"}}>ravindra.pawar.mit@gmail.com</span>
+          <strong>{contact.displayName}</strong>
+          <span>{contact.location}</span>
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          {contact.phone && <a href={`tel:${contact.phone}`}>{contact.phone}</a>}
+          <a href={contact.portfolioUrl} target="_blank" rel="noreferrer">
+            Portfolio website
+          </a>
+          {contentError && <span>{contentError}</span>}
         </div>
         <div className="map-wrap">
-          <MapContainer center={HADAPSAR_AREA_CENTER} zoom={12}>
+          <MapContainer key={mapCenter.join(',')} center={mapCenter} zoom={12}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Circle
-              center={HADAPSAR_AREA_CENTER}
+              center={mapCenter}
               radius={3000}
               pathOptions={{
                 color: '#4FEFFF',
@@ -150,7 +138,7 @@ const Contact = () => {
               }}
             >
               <Tooltip permanent direction="center" className="map-area-label">
-                Hadapsar area
+                {contact.location}
               </Tooltip>
             </Circle>
           </MapContainer>

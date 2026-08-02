@@ -1,4 +1,6 @@
 import {
+  isCoordinateInRange,
+  isEmail,
   isHttpUrl,
   validateEntry,
   validateImage,
@@ -11,6 +13,14 @@ describe('dashboard validation', () => {
     expect(isHttpUrl('http://localhost:3000')).toBe(true)
     expect(isHttpUrl('javascript:alert(1)')).toBe(false)
     expect(isHttpUrl('not a url')).toBe(false)
+  })
+
+  test('validates email addresses and map coordinates', () => {
+    expect(isEmail('ravindra@example.com')).toBe(true)
+    expect(isEmail('not-an-email')).toBe(false)
+    expect(isCoordinateInRange('18.5089', -90, 90)).toBe(true)
+    expect(isCoordinateInRange('', -90, 90)).toBe(false)
+    expect(isCoordinateInRange(181, -180, 180)).toBe(false)
   })
 
   test('validates image type and size', () => {
@@ -42,7 +52,7 @@ describe('dashboard validation', () => {
     ).toMatch(/10 MB/)
   })
 
-  test('requires project content and rejects unsafe URLs', () => {
+  test('requires project content, rejects unsafe URLs, and allows no image', () => {
     const errors = validateEntry(
       'projects',
       {
@@ -61,9 +71,9 @@ describe('dashboard validation', () => {
         name: expect.any(String),
         description: expect.any(String),
         websiteUrl: expect.any(String),
-        file: expect.any(String),
       })
     )
+    expect(errors.file).toBeUndefined()
   })
 
   test('limits experience bullet count and length', () => {
@@ -79,5 +89,34 @@ describe('dashboard validation', () => {
     )
 
     expect(errors.bullets).toMatch(/10/)
+  })
+
+  test('validates new optional entry fields when supplied', () => {
+    expect(
+      validateEntry(
+        'experience',
+        {
+          title: 'Developer',
+          company: 'Example',
+          period: '2024 - 2026',
+          bullets: [],
+          leavingReason: 'x'.repeat(501),
+        },
+        false
+      ).leavingReason
+    ).toMatch(/500/)
+
+    expect(
+      validateEntry(
+        'education',
+        {
+          institution: 'MIT',
+          degree: 'B.Tech',
+          dates: '2020 - 2023',
+          grade: 'x'.repeat(81),
+        },
+        false
+      ).grade
+    ).toMatch(/80/)
   })
 })

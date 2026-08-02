@@ -143,9 +143,13 @@ The contact form uses **EmailJS** for email delivery without a backend server.
 
 ## 📝 Portfolio CMS Setup
 
-The protected `/dashboard` manages Home, About, Skills, Projects, Experience,
-Education, Certificates, and the downloadable CV. Public pages continue using
-the original content until the dashboard migration completes.
+The protected `/dashboard` manages Home, About, Skills, Contact, Projects,
+Experience, Education, Certificates, and the downloadable CV. Public pages
+continue using the original content until the dashboard migration completes.
+
+Skills support portfolio categories, Contact controls the public contact card
+and map, Projects support optional role/period metadata, Experience supports an
+optional public leaving reason, and Education supports an optional grade.
 
 ### 1. Enable authentication
 
@@ -191,7 +195,8 @@ marker switches the public site from its legacy sources to the CMS collections.
 
 ### CMS media limits
 
-- Project and certificate images: JPEG, PNG, or WebP, maximum 5 MB.
+- Optional project images and required certificate images: JPEG, PNG, or WebP,
+  maximum 5 MB. Projects without images use a branded placeholder.
 - CV: PDF, maximum 10 MB.
 - New uploads are stored below `portfolio/{section}/{documentId}`.
 

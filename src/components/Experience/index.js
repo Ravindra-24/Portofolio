@@ -59,6 +59,11 @@ const Experience = () => {
                   <li key={i}>{b}</li>
                 ))}
               </ul>
+              {item.leavingReason && (
+                <p className="leaving-reason">
+                  <strong>Reason for leaving:</strong> {item.leavingReason}
+                </p>
+              )}
             </div>
           </div>
         ))}

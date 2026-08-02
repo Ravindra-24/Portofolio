@@ -82,8 +82,51 @@ runRulesTests('Firebase portfolio security rules', () => {
     await assertFails(
       setDoc(doc(db, 'skills', 'skill-1'), {
         name: 'React',
+        category: 'frontend',
         published: true,
         order: 0,
+      })
+    )
+  })
+
+  test('administrators can save valid contact content', async () => {
+    const db = testEnv.authenticatedContext('admin-user').firestore()
+    await assertSucceeds(
+      setDoc(doc(db, 'siteContent', 'main'), {
+        contact: {
+          displayName: 'Ravindra Pawar',
+          email: 'ravindra@example.com',
+          phone: '',
+          location: 'Pune, India',
+          portfolioUrl: 'https://example.com',
+          mapLatitude: 18.5089,
+          mapLongitude: 73.9365,
+        },
+      })
+    )
+  })
+
+  test('legacy site content without a contact map remains writable', async () => {
+    const db = testEnv.authenticatedContext('admin-user').firestore()
+    await assertSucceeds(
+      setDoc(doc(db, 'siteContent', 'main'), {
+        home: { name: 'Ravindra' },
+      })
+    )
+  })
+
+  test('contact content rejects invalid coordinates and URLs', async () => {
+    const db = testEnv.authenticatedContext('admin-user').firestore()
+    await assertFails(
+      setDoc(doc(db, 'siteContent', 'main'), {
+        contact: {
+          displayName: 'Ravindra Pawar',
+          email: 'ravindra@example.com',
+          location: 'Pune, India',
+          portfolioUrl: 'javascript:alert(1)',
+          mapLatitude: 91,
+          mapLongitude: 73.9365,
+        },
       })
     )
   })
@@ -93,6 +136,7 @@ runRulesTests('Firebase portfolio security rules', () => {
     await assertSucceeds(
       setDoc(doc(db, 'skills', 'skill-1'), {
         name: 'React',
+        category: 'frontend',
         published: true,
         order: 0,
       })

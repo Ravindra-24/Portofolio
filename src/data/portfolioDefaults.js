@@ -1,6 +1,14 @@
 import projects from '../components/Projects/data'
 import experience from '../components/Experience/data'
 
+export const SKILL_CATEGORY_OPTIONS = [
+  { value: 'frontend', label: 'Frontend' },
+  { value: 'backend', label: 'Backend' },
+  { value: 'databases-cloud', label: 'Databases & Cloud' },
+  { value: 'mobile-testing-tools', label: 'Mobile, Testing & Tools' },
+  { value: 'other', label: 'Other' },
+]
+
 export const DEFAULT_SITE_CONTENT = {
   home: {
     name: 'Ravindra',
@@ -23,12 +31,32 @@ export const DEFAULT_SITE_CONTENT = {
     linkedinUrl: 'https://www.linkedin.com/in/ravindra-shrimant-pawar/',
     githubUrl: 'https://github.com/Ravindra-24',
   },
+  contact: {
+    displayName: 'Ravindra Pawar',
+    email: 'ravindra.pawar.mit@gmail.com',
+    phone: '',
+    location: 'Hadapsar, Pune, Maharashtra, India',
+    portfolioUrl: 'https://ravindrapawar.vercel.app/',
+    mapLatitude: 18.5089,
+    mapLongitude: 73.9365,
+  },
   cv: {
     fileUrl: '',
     storagePath: '',
     fileName: '',
   },
 }
+
+export const mergeSiteContentDefaults = (stored = {}) => ({
+  ...DEFAULT_SITE_CONTENT,
+  ...stored,
+  home: { ...DEFAULT_SITE_CONTENT.home, ...stored.home },
+  about: { ...DEFAULT_SITE_CONTENT.about, ...stored.about },
+  skills: { ...DEFAULT_SITE_CONTENT.skills, ...stored.skills },
+  social: { ...DEFAULT_SITE_CONTENT.social, ...stored.social },
+  contact: { ...DEFAULT_SITE_CONTENT.contact, ...stored.contact },
+  cv: { ...DEFAULT_SITE_CONTENT.cv, ...stored.cv },
+})
 
 export const DEFAULT_SKILLS = [
   'ReactJS',
@@ -50,6 +78,7 @@ export const DEFAULT_SKILLS = [
 ].map((name, index) => ({
   id: `seed-skill-${index + 1}`,
   name,
+  category: 'other',
   order: index,
   published: true,
 }))

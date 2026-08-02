@@ -20,6 +20,43 @@
     right: 0;
     overflow: hidden;
   }
+
+  .text-zone {
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    padding-right: 12px;
+  }
+}
+
+.skill-groups {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.skill-group {
+  h2 {
+    color: #4fefff;
+    font-family: 'Coolvetica', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    margin: 0 0 7px;
+  }
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  span {
+    background: rgba(79, 239, 255, 0.08);
+    border: 1px solid rgba(79, 239, 255, 0.4);
+    border-radius: 999px;
+    color: #ecf1f1;
+    font-size: 11px;
+    padding: 5px 9px;
+  }
 }
 
 .content-skills {
@@ -51,6 +88,11 @@
       width: 100%;
       height: auto;
       overflow: hidden;
+    }
+
+    .text-zone {
+      max-height: none;
+      overflow: visible;
     }
   }
 }

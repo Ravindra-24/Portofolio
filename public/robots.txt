@@ -1,5 +1,3 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /
-Disallow: /dashboard
-
-Sitemap: https://ravindrapawar.vercel.app/sitemap.xml
+Disallow:

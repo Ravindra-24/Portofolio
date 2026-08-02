@@ -5,6 +5,7 @@ import Loader from 'react-loaders'
 import TagCloud from 'TagCloud'
 import {
   DEFAULT_SKILLS,
+  SKILL_CATEGORY_OPTIONS,
 } from '../../data/portfolioDefaults'
 import {
   usePortfolioCollection,
@@ -35,6 +36,16 @@ const Skills = () => {
   const { content, error } = useSiteContent()
   const texts = useMemo(
     () => skillEntries.map((skill) => skill.name),
+    [skillEntries]
+  )
+  const skillGroups = useMemo(
+    () =>
+      SKILL_CATEGORY_OPTIONS.map((category) => ({
+        ...category,
+        skills: skillEntries.filter(
+          (skill) => (skill.category || 'other') === category.value
+        ),
+      })).filter((category) => category.skills.length),
     [skillEntries]
   )
 
@@ -79,6 +90,18 @@ const Skills = () => {
           <p align="LEFT">
             Visit my <span><a className="font-bold" style={{textDecoration: "underline"}} href={content.social?.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a></span> profile, or check my <span><a className="font-bold" style={{textDecoration: "underline"}} href={content.social?.githubUrl} target="_blank" rel="noreferrer">GitHub</a></span> for projects and code samples.
           </p>
+          <div className="skill-groups" aria-label="Skills by category">
+            {skillGroups.map((group) => (
+              <section className="skill-group" key={group.value}>
+                <h2>{group.label}</h2>
+                <div className="skill-tags">
+                  {group.skills.map((skill) => (
+                    <span key={skill.id}>{skill.name}</span>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
           {error && <p>{error}</p>}
         </div>
         <div className="skills-container">

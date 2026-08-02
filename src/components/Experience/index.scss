@@ -155,10 +155,24 @@
             }
           }
         }
+
+        .leaving-reason {
+          border-top: 1px solid rgba(79, 239, 255, 0.22);
+          color: #cbd8df;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 18px 0 0;
+          padding-top: 14px;
+
+          strong {
+            color: #4fefff;
+          }
+        }
       }
     }
   }
 }
+
 
 @keyframes fadeIn {
   from {
@@ -261,4 +275,3 @@
     }
   }
 }
-

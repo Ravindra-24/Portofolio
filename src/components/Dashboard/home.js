@@ -21,6 +21,7 @@ const SECTIONS = [
   ['home', 'Home'],
   ['about', 'About'],
   ['skills', 'Skills'],
+  ['contact', 'Contact'],
   ['projects', 'Projects'],
   ['experience', 'Experience'],
   ['education', 'Education'],
@@ -245,6 +246,18 @@ const Home = () => {
               .filter(Boolean),
           },
         }
+      } else if (activeSection === 'contact') {
+        patch = {
+          contact: {
+            displayName: draft.displayName.trim(),
+            email: draft.email.trim(),
+            phone: (draft.phone || '').trim(),
+            location: draft.location.trim(),
+            portfolioUrl: draft.portfolioUrl.trim(),
+            mapLatitude: Number(draft.mapLatitude),
+            mapLongitude: Number(draft.mapLongitude),
+          },
+        }
       } else {
         if (draft.file) {
           uploaded = await uploadPortfolioFile(
@@ -381,7 +394,7 @@ const Home = () => {
               <p className="cms-state">Loading content…</p>
             ) : (
               <>
-                {['home', 'about', 'skills', 'cv'].includes(activeSection) &&
+                {['home', 'about', 'skills', 'contact', 'cv'].includes(activeSection) &&
                   content && (
                     <SiteContentForm
                       section={activeSection}

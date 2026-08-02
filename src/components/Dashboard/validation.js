@@ -8,6 +8,15 @@ export const isHttpUrl = (value) => {
   }
 }
 
+export const isEmail = (value) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim())
+
+export const isCoordinateInRange = (value, min, max) => {
+  if (value === '' || value === null || value === undefined) return false
+  const number = Number(value)
+  return Number.isFinite(number) && number >= min && number <= max
+}
+
 export const validateImage = (file) => {
   if (!file) return ''
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
@@ -40,6 +49,19 @@ export const validateEntry = (section, values, hasExistingImage) => {
 
   if (section === 'skills') required('name', 'Skill', 60)
 
+  if (
+    section === 'skills' &&
+    ![
+      'frontend',
+      'backend',
+      'databases-cloud',
+      'mobile-testing-tools',
+      'other',
+    ].includes(values.category)
+  ) {
+    errors.category = 'Choose a valid skill category.'
+  }
+
   if (section === 'projects') {
     required('name', 'Project name')
     required('description', 'Description', 2000)
@@ -49,7 +71,12 @@ export const validateEntry = (section, values, hasExistingImage) => {
     if (!isHttpUrl(values.githubUrl)) {
       errors.githubUrl = 'Enter a valid HTTP or HTTPS URL.'
     }
-    if (!values.file && !hasExistingImage) errors.file = 'An image is required.'
+    if ((values.role || '').trim().length > 120) {
+      errors.role = 'Project role must be 120 characters or fewer.'
+    }
+    if ((values.period || '').trim().length > 120) {
+      errors.period = 'Project period must be 120 characters or fewer.'
+    }
     if ((values.skills || []).length > 20) {
       errors.skills = 'Use no more than 20 skills.'
     }
@@ -64,12 +91,18 @@ export const validateEntry = (section, values, hasExistingImage) => {
     } else if ((values.bullets || []).some((bullet) => bullet.length > 500)) {
       errors.bullets = 'Each bullet must be 500 characters or fewer.'
     }
+    if ((values.leavingReason || '').trim().length > 500) {
+      errors.leavingReason = 'Reason for leaving must be 500 characters or fewer.'
+    }
   }
 
   if (section === 'education') {
     required('institution', 'Institution')
     required('degree', 'Degree')
     required('dates', 'Dates')
+    if ((values.grade || '').trim().length > 80) {
+      errors.grade = 'Grade must be 80 characters or fewer.'
+    }
   }
 
   if (section === 'certificates') {
