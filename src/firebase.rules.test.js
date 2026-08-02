@@ -143,6 +143,56 @@ runRulesTests('Firebase portfolio security rules', () => {
     )
   })
 
+  test('project rules accept bounded case studies and galleries', async () => {
+    const db = testEnv.authenticatedContext('admin-user').firestore()
+    await assertSucceeds(
+      setDoc(doc(db, 'projects', 'immersive-project'), {
+        name: 'Immersive project',
+        description: 'A detailed case study',
+        skills: ['React'],
+        published: true,
+        order: 2,
+        caseStudy: {
+          challenge: 'Challenge',
+          approach: 'Approach',
+          outcome: 'Outcome',
+        },
+        gallery: [
+          {
+            imageUrl: 'https://example.com/detail.jpg',
+            storagePath: 'portfolio/projects/immersive-project/detail.jpg',
+            alt: 'Product detail',
+          },
+        ],
+      })
+    )
+  })
+
+  test('project rules reject oversized or malformed immersive content', async () => {
+    const db = testEnv.authenticatedContext('admin-user').firestore()
+    await assertFails(
+      setDoc(doc(db, 'projects', 'invalid-immersive-project'), {
+        name: 'Invalid project',
+        description: 'Invalid data',
+        skills: [],
+        published: true,
+        order: 3,
+        caseStudy: { challenge: 'x'.repeat(3001) },
+        gallery: [],
+      })
+    )
+    await assertFails(
+      setDoc(doc(db, 'projects', 'invalid-gallery-project'), {
+        name: 'Invalid gallery',
+        description: 'Invalid data',
+        skills: [],
+        published: true,
+        order: 4,
+        gallery: [{ imageUrl: 'https://example.com/detail.jpg', alt: '' }],
+      })
+    )
+  })
+
   test('storage accepts admin images and rejects non-admin uploads', async () => {
     const image = new Uint8Array([137, 80, 78, 71])
     const adminStorage = testEnv.authenticatedContext('admin-user').storage()

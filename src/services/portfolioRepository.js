@@ -103,17 +103,19 @@ export const saveSiteContent = async (patch) => {
 export const removeEntry = async (section, item) => {
   await deleteDoc(doc(db, section, item.id))
 
-  if (item.storagePath?.startsWith('portfolio/')) {
-    try {
-      await deleteObject(ref(storage, item.storagePath))
-    } catch (error) {
-      // The database deletion is authoritative. A missing or undeletable old
-      // object is reported to the caller without restoring a stale document.
-      return { cleanupWarning: true }
-    }
-  }
+  const managedPaths = [
+    item.storagePath,
+    ...(Array.isArray(item.gallery)
+      ? item.gallery.map((galleryItem) => galleryItem.storagePath)
+      : []),
+  ].filter((path) => path?.startsWith('portfolio/'))
+  const cleanupResults = await Promise.allSettled(
+    managedPaths.map((path) => deleteObject(ref(storage, path)))
+  )
 
-  return { cleanupWarning: false }
+  return {
+    cleanupWarning: cleanupResults.some((result) => result.status === 'rejected'),
+  }
 }
 
 export const swapEntryOrder = async (section, first, second) => {
@@ -184,7 +186,7 @@ const copyBundledImage = async (sourceUrl, path) => {
   return getDownloadURL(snapshot.ref)
 }
 
-const legacyCertificates = async () => {
+export const getLegacyCertificates = async () => {
   const categories = [
     ['Web Development Certificates', 'full-stack'],
     ['Google Certificates', 'google'],
@@ -206,6 +208,14 @@ const legacyCertificates = async () => {
   return results
 }
 
+export const getLegacyCv = async () => {
+  const snapshot = await getDocs(collection(db, 'CV'))
+  const item = snapshot.docs[0]?.data()
+  return item
+    ? { fileUrl: item.image || '', storagePath: '', fileName: item.name || 'CV' }
+    : { fileUrl: '', storagePath: '', fileName: '' }
+}
+
 export const importExistingPortfolio = async (onProgress) => {
   if (await getMigrationStatus()) {
     return { alreadyImported: true }
@@ -213,7 +223,7 @@ export const importExistingPortfolio = async (onProgress) => {
 
   onProgress?.('Reading existing Firebase content…')
   const [certificates, cvSnapshot] = await Promise.all([
-    legacyCertificates(),
+    getLegacyCertificates(),
     getDocs(collection(db, 'CV')),
   ])
 

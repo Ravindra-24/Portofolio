@@ -189,6 +189,11 @@
   padding: 22px;
 }
 
+.cms-entry-form-anchor {
+  min-width: 0;
+  scroll-margin-top: 20px;
+}
+
 .entry-list {
   align-self: start;
   max-height: 680px;
@@ -227,6 +232,7 @@
 
 .entry-row-copy {
   display: grid;
+  gap: 4px;
   min-width: 0;
 
   strong {
@@ -239,7 +245,25 @@
   span {
     color: #8ba0ad;
     font-size: 11px;
-    margin-top: 4px;
+  }
+
+  small {
+    display: -webkit-box;
+    margin-top: 5px;
+    overflow: hidden;
+    color: #b9cad3;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .entry-row-content-status {
+    display: block;
+    color: #4fefff;
+    letter-spacing: 0.02em;
+    -webkit-line-clamp: unset;
   }
 }
 
@@ -308,6 +332,71 @@
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cms-case-study-fields,
+.cms-gallery-fields {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid rgba(79, 239, 255, 0.2);
+  border-radius: 7px;
+
+  legend {
+    padding: 0 8px;
+    color: #4fefff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+}
+
+.cms-gallery-entry {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 6px;
+  background: rgba(7, 29, 41, 0.55);
+
+  > img {
+    width: 120px;
+    height: 82px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
+
+  .field-error {
+    grid-column: 1 / -1;
+  }
+}
+
+.cms-gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 7px;
+
+  button {
+    padding: 7px 9px;
+    border: 1px solid #294654;
+    border-radius: 4px;
+    background: transparent;
+    color: #b9cad3;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  button.danger {
+    border-color: #ff6b7a;
+    color: #ff8b96;
+  }
 }
 
 .field-error {
@@ -434,6 +523,15 @@
 
   .cms-field-grid {
     grid-template-columns: 1fr;
+  }
+
+  .cms-gallery-entry {
+    grid-template-columns: 1fr;
+
+    > img {
+      width: 100%;
+      height: 160px;
+    }
   }
 
   .cms-notice {

@@ -1,35 +1,40 @@
-import { Route, Routes } from 'react-router-dom'
-import Home from './components/Home'
-import About from './components/About'
-import Contact from './components/Contact'
-import Layout from './components/Layout'
-import Dashboard from './components/Dashboard'
-import './App.scss'
-import Certificates from './components/Certificates'
-import Projects from './components/Projects'
-import Education from './components/Education/Education'
-import Skills from './components/Skills/Skills'
-import Experience from './components/Experience'
+import { lazy, Suspense, useLayoutEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { ViewModeProvider, useViewMode, VIEW_MODES } from './view-mode/ViewModeContext'
+import ViewModeSwitch from './view-mode/ViewModeSwitch'
 
-function App() {
+const ClassicApp = lazy(() => import('./classic/ClassicApp'))
+const ImmersiveApp = lazy(() => import('./immersive/ImmersiveApp'))
+
+const AppView = () => {
+  const { viewMode } = useViewMode()
+  const location = useLocation()
+  const isDashboard = /^\/dashboard(?:\/|$)/.test(location.pathname)
+  const effectiveMode = isDashboard ? VIEW_MODES.CLASSIC : viewMode
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.portfolioView = effectiveMode
+    return () => {
+      delete document.documentElement.dataset.portfolioView
+    }
+  }, [effectiveMode])
+
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/certificate" element={<Certificates />} />
-          <Route path="/project" element={<Projects />} />
-          <Route path="/experience" element={<Experience />} />
-          <Route path="/education" element={<Education />} />
-          <Route path="/skills" element={<Skills />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
-      </Routes>
+      {!isDashboard && <ViewModeSwitch />}
+      <Suspense fallback={<div className="view-loading">Loading view…</div>}>
+        {effectiveMode === VIEW_MODES.IMMERSIVE ? <ImmersiveApp /> : <ClassicApp />}
+      </Suspense>
     </>
   )
 }
 
+function App() {
+  return (
+    <ViewModeProvider>
+      <AppView />
+    </ViewModeProvider>
+  )
+}
 
 export default App

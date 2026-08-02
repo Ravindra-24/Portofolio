@@ -15,6 +15,12 @@ const emptyDraft = (section) => {
       skillsText: '',
       websiteUrl: '',
       githubUrl: '',
+      caseStudy: {
+        challenge: '',
+        approach: '',
+        outcome: '',
+      },
+      gallery: [],
     }
   }
   if (section === 'experience') {
@@ -50,6 +56,12 @@ const draftFromItem = (section, item) => {
           .map((value) => value.trim())
           .filter(Boolean)
     draft.skillsText = skills.join(', ')
+    draft.caseStudy = {
+      challenge: item.caseStudy?.challenge || '',
+      approach: item.caseStudy?.approach || '',
+      outcome: item.caseStudy?.outcome || '',
+    }
+    draft.gallery = Array.isArray(item.gallery) ? item.gallery : []
   }
   if (section === 'experience') {
     draft.bulletsText = (item.bullets || []).join('\n')
@@ -59,6 +71,29 @@ const draftFromItem = (section, item) => {
 
 const FieldError = ({ children }) =>
   children ? <span className="field-error">{children}</span> : null
+
+const GalleryPreview = ({ entry, projectName }) => {
+  const previewUrl = useMemo(
+    () =>
+      entry.file && URL.createObjectURL
+        ? URL.createObjectURL(entry.file)
+        : entry.imageUrl || '',
+    [entry.file, entry.imageUrl]
+  )
+
+  useEffect(
+    () => () => {
+      if (entry.file && previewUrl && URL.revokeObjectURL) {
+        URL.revokeObjectURL(previewUrl)
+      }
+    },
+    [entry.file, previewUrl]
+  )
+
+  return previewUrl ? (
+    <img src={previewUrl} alt={`${projectName || 'Project'} gallery preview`} />
+  ) : null
+}
 
 const EntryForm = ({
   section,
@@ -100,6 +135,42 @@ const EntryForm = ({
     onDirtyChange(true)
   }
 
+  const updateCaseStudy = (key, value) => {
+    update('caseStudy', { ...values.caseStudy, [key]: value })
+  }
+
+  const updateGalleryEntry = (index, patch) => {
+    update(
+      'gallery',
+      values.gallery.map((entry, entryIndex) =>
+        entryIndex === index ? { ...entry, ...patch } : entry
+      )
+    )
+  }
+
+  const moveGalleryEntry = (index, direction) => {
+    const target = index + direction
+    if (target < 0 || target >= values.gallery.length) return
+    const next = [...values.gallery]
+    ;[next[index], next[target]] = [next[target], next[index]]
+    update('gallery', next)
+  }
+
+  const addGalleryFiles = (files) => {
+    const available = Math.max(0, 4 - values.gallery.length)
+    const nextFiles = Array.from(files || []).slice(0, available)
+    if (!nextFiles.length) return
+    update('gallery', [
+      ...values.gallery,
+      ...nextFiles.map((file, index) => ({
+        file,
+        imageUrl: '',
+        storagePath: '',
+        alt: `${values.name || 'Project'} detail ${values.gallery.length + index + 1}`,
+      })),
+    ])
+  }
+
   const submit = (event) => {
     event.preventDefault()
     const normalized = { ...values }
@@ -109,6 +180,15 @@ const EntryForm = ({
         .map((value) => value.trim())
         .filter(Boolean)
       delete normalized.skillsText
+      normalized.caseStudy = {
+        challenge: (values.caseStudy?.challenge || '').trim(),
+        approach: (values.caseStudy?.approach || '').trim(),
+        outcome: (values.caseStudy?.outcome || '').trim(),
+      }
+      normalized.gallery = values.gallery.map((entry) => ({
+        ...entry,
+        alt: (entry.alt || '').trim(),
+      }))
     }
     if (section === 'experience') {
       normalized.bullets = values.bulletsText
@@ -246,6 +326,87 @@ const EntryForm = ({
               <FieldError>{errors.githubUrl}</FieldError>
             </label>
           </div>
+          <fieldset className="cms-case-study-fields">
+            <legend>Immersive case study (optional)</legend>
+            <label>
+              Challenge
+              <textarea
+                maxLength="3000"
+                rows="4"
+                value={values.caseStudy?.challenge || ''}
+                onChange={(event) => updateCaseStudy('challenge', event.target.value)}
+              />
+              <FieldError>{errors.challenge}</FieldError>
+            </label>
+            <label>
+              Approach
+              <textarea
+                maxLength="3000"
+                rows="4"
+                value={values.caseStudy?.approach || ''}
+                onChange={(event) => updateCaseStudy('approach', event.target.value)}
+              />
+              <FieldError>{errors.approach}</FieldError>
+            </label>
+            <label>
+              Outcome
+              <textarea
+                maxLength="3000"
+                rows="4"
+                value={values.caseStudy?.outcome || ''}
+                onChange={(event) => updateCaseStudy('outcome', event.target.value)}
+              />
+              <FieldError>{errors.outcome}</FieldError>
+            </label>
+          </fieldset>
+          <fieldset className="cms-gallery-fields">
+            <legend>Case study gallery (optional, up to four images)</legend>
+            {values.gallery.map((entry, index) => (
+              <div className="cms-gallery-entry" key={entry.storagePath || entry.imageUrl || `${entry.file?.name}-${index}`}>
+                <GalleryPreview entry={entry} projectName={values.name} />
+                <label>
+                  Alternative text
+                  <input
+                    maxLength="160"
+                    value={entry.alt || ''}
+                    onChange={(event) => updateGalleryEntry(index, { alt: event.target.value })}
+                  />
+                </label>
+                <div className="cms-gallery-actions">
+                  <button type="button" onClick={() => moveGalleryEntry(index, -1)} disabled={index === 0 || busy}>
+                    Move up
+                  </button>
+                  <button type="button" onClick={() => moveGalleryEntry(index, 1)} disabled={index === values.gallery.length - 1 || busy}>
+                    Move down
+                  </button>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => update('gallery', values.gallery.filter((_, entryIndex) => entryIndex !== index))}
+                    disabled={busy}
+                  >
+                    Remove
+                  </button>
+                </div>
+                <FieldError>{errors[`gallery-${index}`]}</FieldError>
+              </div>
+            ))}
+            {values.gallery.length < 4 && (
+              <label>
+                Add gallery images
+                <input
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) => {
+                    addGalleryFiles(event.target.files)
+                    event.target.value = ''
+                  }}
+                />
+              </label>
+            )}
+            <FieldError>{errors.gallery}</FieldError>
+          </fieldset>
         </>
       )}
 

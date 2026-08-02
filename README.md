@@ -8,6 +8,9 @@ A professional, full-stack portfolio website showcasing my skills, experience, a
 
 ## 📋 Features
 
+- **Dual Portfolio Views** — The unchanged Classic portfolio remains the default, with a persistent switch to a cinematic Immersive view
+- **Immersive Case Studies** — Continuous editorial layout, deep-linked sections, animated project details, and accessible certificate previews
+- **Progressive Enhancement** — GSAP, Lenis, and Three.js load only for Immersive visitors and fall back cleanly for reduced motion, touch, save-data, and WebGL failures
 - **Responsive Design** — Optimized for desktop, tablet, and mobile devices
 - **Interactive Animations** — Smooth, engaging transitions and letter animations using GSAP and React
 - **Skills Visualization** — 3D tag cloud showcasing tech stack
@@ -41,6 +44,7 @@ A professional, full-stack portfolio website showcasing my skills, experience, a
 
 ```
 src/
+├── classic/                # Original route tree and styles, unchanged
 ├── components/
 │   ├── About/              # About section with skills intro
 │   ├── Contact/            # Contact form with EmailJS integration
@@ -53,8 +57,11 @@ src/
 │   ├── Dashboard/          # (Protected) User dashboard
 │   ├── Login/              # Google Sign-In integration
 │   └── ...
+├── immersive/              # Lazy-loaded cinematic view and runtime
+├── view-mode/              # Persistent mode state and global switch
+├── services/               # Shared CMS repository used by both views
 ├── firebase.js             # Firebase configuration
-├── App.js                  # Main app component
+├── App.js                  # Mode-aware lazy application shell
 └── index.js                # React entry point
 ```
 
@@ -151,6 +158,23 @@ Skills support portfolio categories, Contact controls the public contact card
 and map, Projects support optional role/period metadata, Experience supports an
 optional public leaving reason, and Education supports an optional grade.
 
+Project records also support optional Immersive case-study fields (`challenge`,
+`approach`, and `outcome`) plus up to four ordered gallery images with accessible
+alt text. Existing project records remain valid and continue rendering in both
+views without migration.
+
+## 🌓 Classic and Immersive views
+
+Classic is the first-visit default. The floating public switch stores the chosen
+mode under `portfolio:view-mode:v1`, synchronizes changes across tabs, and keeps
+the existing public URLs. In Immersive mode those URLs scroll to sections of the
+continuous page, while `/project/:projectId` opens a case study. `/dashboard`
+always uses Classic mode and never displays the switch.
+
+The Immersive shell, CSS, GSAP/ScrollTrigger, Lenis, and Three.js runtime are
+separate lazy chunks. Returning to Classic destroys smooth scrolling, animation
+timelines, WebGL resources, cursor handlers, and their animation frames.
+
 ### 1. Enable authentication
 
 In Firebase Console, open **Authentication → Sign-in method** and enable the
@@ -195,8 +219,9 @@ marker switches the public site from its legacy sources to the CMS collections.
 
 ### CMS media limits
 
-- Optional project images and required certificate images: JPEG, PNG, or WebP,
-  maximum 5 MB. Projects without images use a branded placeholder.
+- Optional project cover/gallery images and required certificate images: JPEG,
+  PNG, or WebP, maximum 5 MB each. Project galleries contain at most four images.
+  Projects without images use a branded placeholder.
 - CV: PDF, maximum 10 MB.
 - New uploads are stored below `portfolio/{section}/{documentId}`.
 

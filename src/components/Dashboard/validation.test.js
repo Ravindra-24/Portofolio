@@ -119,4 +119,40 @@ describe('dashboard validation', () => {
       ).grade
     ).toMatch(/80/)
   })
+
+  test('validates immersive project case studies and galleries', () => {
+    const errors = validateEntry(
+      'projects',
+      {
+        name: 'Portfolio',
+        description: 'Project description',
+        skills: [],
+        caseStudy: { challenge: 'x'.repeat(3001) },
+        gallery: [
+          {
+            file: new File(['image'], 'detail.webp', { type: 'image/webp' }),
+            alt: '',
+          },
+        ],
+      },
+      false
+    )
+    expect(errors.challenge).toMatch(/3,000/)
+    expect(errors['gallery-0']).toMatch(/alternative text/i)
+
+    const tooMany = validateEntry(
+      'projects',
+      {
+        name: 'Portfolio',
+        description: 'Project description',
+        skills: [],
+        gallery: Array.from({ length: 5 }, (_, index) => ({
+          imageUrl: `https://example.com/${index}.jpg`,
+          alt: `Detail ${index}`,
+        })),
+      },
+      false
+    )
+    expect(tooMany.gallery).toMatch(/four/i)
+  })
 })

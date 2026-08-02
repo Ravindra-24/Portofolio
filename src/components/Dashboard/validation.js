@@ -80,6 +80,26 @@ export const validateEntry = (section, values, hasExistingImage) => {
     if ((values.skills || []).length > 20) {
       errors.skills = 'Use no more than 20 skills.'
     }
+    ;['challenge', 'approach', 'outcome'].forEach((field) => {
+      if ((values.caseStudy?.[field] || '').trim().length > 3000) {
+        errors[field] = `${field[0].toUpperCase()}${field.slice(1)} must be 3,000 characters or fewer.`
+      }
+    })
+    const gallery = Array.isArray(values.gallery) ? values.gallery : []
+    if (gallery.length > 4) {
+      errors.gallery = 'Use no more than four gallery images.'
+    }
+    gallery.forEach((entry, index) => {
+      const imageError = validateImage(entry.file)
+      if (imageError) errors[`gallery-${index}`] = imageError
+      else if (!entry.file && !entry.imageUrl) {
+        errors[`gallery-${index}`] = 'Choose an image or remove this gallery item.'
+      } else if (!(entry.alt || '').trim()) {
+        errors[`gallery-${index}`] = 'Alternative text is required.'
+      } else if ((entry.alt || '').trim().length > 160) {
+        errors[`gallery-${index}`] = 'Alternative text must be 160 characters or fewer.'
+      }
+    })
   }
 
   if (section === 'experience') {

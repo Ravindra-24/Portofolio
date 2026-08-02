@@ -140,4 +140,68 @@ describe('EntryForm', () => {
       expect.objectContaining({ leavingReason: 'Career growth' })
     )
   })
+
+  test('submits immersive case-study copy and ordered gallery drafts', () => {
+    render(<EntryForm {...baseProps} section="projects" />)
+    fireEvent.change(screen.getByLabelText(/project name/i), {
+      target: { value: 'Immersive Portfolio' },
+    })
+    fireEvent.change(screen.getByLabelText(/^description/i), {
+      target: { value: 'A cinematic portfolio experience' },
+    })
+    fireEvent.change(screen.getByLabelText(/^challenge/i), {
+      target: { value: '  Make complex work feel simple.  ' },
+    })
+    const galleryFile = new File(['image'], 'detail.webp', {
+      type: 'image/webp',
+    })
+    fireEvent.change(screen.getByLabelText(/add gallery images/i), {
+      target: { files: [galleryFile] },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /add entry/i }))
+
+    expect(baseProps.onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        caseStudy: expect.objectContaining({
+          challenge: 'Make complex work feel simple.',
+        }),
+        gallery: [
+          expect.objectContaining({
+            file: galleryFile,
+            alt: 'Immersive Portfolio detail 1',
+          }),
+        ],
+      })
+    )
+  })
+
+  test('allows existing gallery images to be reordered and removed', () => {
+    render(
+      <EntryForm
+        {...baseProps}
+        section="projects"
+        item={{
+          id: 'project-1',
+          name: 'Portfolio',
+          description: 'A portfolio',
+          skills: [],
+          published: true,
+          gallery: [
+            { imageUrl: 'https://example.com/one.jpg', storagePath: 'portfolio/one.jpg', alt: 'One' },
+            { imageUrl: 'https://example.com/two.jpg', storagePath: 'portfolio/two.jpg', alt: 'Two' },
+          ],
+        }}
+      />
+    )
+
+    fireEvent.click(screen.getAllByRole('button', { name: /move up/i })[1])
+    fireEvent.click(screen.getAllByRole('button', { name: /remove/i })[1])
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }))
+
+    expect(baseProps.onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        gallery: [expect.objectContaining({ alt: 'Two' })],
+      })
+    )
+  })
 })

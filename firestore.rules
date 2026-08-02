@@ -18,6 +18,43 @@ service cloud.firestore {
         || (data[field] is string && data[field].size() <= maxSize);
     }
 
+    function validProjectCaseStudy(data) {
+      return !data.keys().hasAny(['caseStudy'])
+        || (
+          data.caseStudy is map
+          && data.caseStudy.keys().hasOnly(['challenge', 'approach', 'outcome'])
+          && optionalString(data.caseStudy, 'challenge', 3000)
+          && optionalString(data.caseStudy, 'approach', 3000)
+          && optionalString(data.caseStudy, 'outcome', 3000)
+        );
+    }
+
+    function validProjectGalleryItem(item) {
+      return item is map
+        && item.keys().hasAll(['imageUrl', 'storagePath', 'alt'])
+        && item.keys().hasOnly(['imageUrl', 'storagePath', 'alt'])
+        && item.imageUrl is string
+        && item.imageUrl.size() > 0
+        && item.imageUrl.size() <= 2048
+        && item.storagePath is string
+        && item.storagePath.size() <= 2048
+        && item.alt is string
+        && item.alt.size() > 0
+        && item.alt.size() <= 160;
+    }
+
+    function validProjectGallery(data) {
+      return !data.keys().hasAny(['gallery'])
+        || (
+          data.gallery is list
+          && data.gallery.size() <= 4
+          && (data.gallery.size() < 1 || validProjectGalleryItem(data.gallery[0]))
+          && (data.gallery.size() < 2 || validProjectGalleryItem(data.gallery[1]))
+          && (data.gallery.size() < 3 || validProjectGalleryItem(data.gallery[2]))
+          && (data.gallery.size() < 4 || validProjectGalleryItem(data.gallery[3]))
+        );
+    }
+
     function validContactFields(contact) {
       return (
         contact is map
@@ -100,7 +137,9 @@ service cloud.firestore {
         && request.resource.data.skills is list
         && request.resource.data.skills.size() <= 20
         && optionalString(request.resource.data, 'role', 120)
-        && optionalString(request.resource.data, 'period', 120);
+        && optionalString(request.resource.data, 'period', 120)
+        && validProjectCaseStudy(request.resource.data)
+        && validProjectGallery(request.resource.data);
       allow delete: if isAdmin();
     }
 

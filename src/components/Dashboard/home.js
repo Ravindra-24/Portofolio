@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { auth } from '../../firebase'
 import {
   createEntryId,
@@ -40,6 +40,7 @@ const ENTRY_SECTIONS = new Set([
 const itemTitle = (item) => item.name || item.title || item.institution
 
 const Home = () => {
+  const entryFormRef = useRef(null)
   const [activeSection, setActiveSection] = useState('home')
   const [migrated, setMigrated] = useState(false)
   const [content, setContent] = useState(null)
@@ -88,6 +89,14 @@ const Home = () => {
     window.addEventListener('beforeunload', warn)
     return () => window.removeEventListener('beforeunload', warn)
   }, [dirty])
+
+  useEffect(() => {
+    if (!editing || !window.matchMedia?.('(max-width: 1000px)').matches) return
+    const frame = requestAnimationFrame(() => {
+      entryFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [editing])
 
   const canDiscardChanges = () =>
     !dirty || window.confirm('Discard your unsaved changes?')
@@ -165,6 +174,7 @@ const Home = () => {
     const isNew = !editing
     const id = editing?.id || createEntryId(activeSection)
     let uploaded = null
+    const galleryUploads = []
 
     try {
       if (values.file) {
@@ -177,6 +187,34 @@ const Home = () => {
       }
 
       const { file, ...entryValues } = values
+      let nextGallery
+      if (activeSection === 'projects') {
+        nextGallery = []
+        for (let index = 0; index < (entryValues.gallery || []).length; index += 1) {
+          const galleryItem = entryValues.gallery[index]
+          if (galleryItem.file) {
+            const galleryUpload = await uploadPortfolioFile(
+              galleryItem.file,
+              activeSection,
+              id,
+              setUploadProgress
+            )
+            galleryUploads.push(galleryUpload)
+            nextGallery.push({
+              imageUrl: galleryUpload.fileUrl,
+              storagePath: galleryUpload.storagePath,
+              alt: galleryItem.alt,
+            })
+          } else {
+            nextGallery.push({
+              imageUrl: galleryItem.imageUrl,
+              storagePath: galleryItem.storagePath || '',
+              alt: galleryItem.alt,
+            })
+          }
+        }
+        entryValues.gallery = nextGallery
+      }
       const order =
         editing?.order ??
         (entries.length ? Math.max(...entries.map((item) => item.order)) + 1 : 0)
@@ -203,12 +241,25 @@ const Home = () => {
         await deleteManagedFile(editing.storagePath)
       }
 
+      if (activeSection === 'projects' && editing?.gallery) {
+        const retainedPaths = new Set((nextGallery || []).map((item) => item.storagePath))
+        const removedPaths = editing.gallery
+          .map((item) => item.storagePath)
+          .filter((path) => path && !retainedPaths.has(path))
+        await Promise.all(removedPaths.map((path) => deleteManagedFile(path)))
+      }
+
       setDirty(false)
       setEditing(null)
       setMessage(isNew ? 'Entry added.' : 'Changes saved.')
       await refreshEntries()
     } catch (saveError) {
       if (uploaded?.storagePath) await deleteManagedFile(uploaded.storagePath)
+      await Promise.all(
+        galleryUploads.map((galleryUpload) =>
+          deleteManagedFile(galleryUpload.storagePath)
+        )
+      )
       setError('Could not save this entry. Your previous content is unchanged.')
     } finally {
       setBusy(false)
@@ -429,6 +480,15 @@ const Home = () => {
                           <div className="entry-row-copy">
                             <strong>{itemTitle(item)}</strong>
                             <span>{item.published ? 'Published' : 'Draft'}</span>
+                            {activeSection === 'projects' && (
+                              <>
+                                <small>{item.description || 'No project description yet.'}</small>
+                                <small className="entry-row-content-status">
+                                  {Object.values(item.caseStudy || {}).filter(Boolean).length}/3 case-study sections
+                                  {' · '}{Array.isArray(item.gallery) ? item.gallery.length : 0}/4 gallery images
+                                </small>
+                              </>
+                            )}
                           </div>
                           <div className="entry-row-actions">
                             <button
@@ -460,16 +520,18 @@ const Home = () => {
                       ))}
                     </div>
 
-                    <EntryForm
-                      key={`${activeSection}-${editing?.id || 'new'}-${entries.length}`}
-                      section={activeSection}
-                      item={editing}
-                      busy={busy}
-                      uploadProgress={uploadProgress}
-                      onSave={handleEntrySave}
-                      onCancel={cancelEditing}
-                      onDirtyChange={setDirty}
-                    />
+                    <div className="cms-entry-form-anchor" ref={entryFormRef}>
+                      <EntryForm
+                        key={`${activeSection}-${editing?.id || 'new'}-${entries.length}`}
+                        section={activeSection}
+                        item={editing}
+                        busy={busy}
+                        uploadProgress={uploadProgress}
+                        onSave={handleEntrySave}
+                        onCancel={cancelEditing}
+                        onDirtyChange={setDirty}
+                      />
+                    </div>
                   </div>
                 )}
               </>
