@@ -24,7 +24,12 @@
   .text-zone {
     max-height: calc(100vh - 80px);
     overflow-y: auto;
-    padding-right: 12px;
+    box-sizing: border-box;
+    padding: 14px 12px 24px 16px;
+
+    h1.page-title {
+      left: 0;
+    }
   }
 }
 
@@ -93,6 +98,11 @@
     .text-zone {
       max-height: none;
       overflow: visible;
+      padding-top: 46px;
+
+      h1.page-title {
+        margin-bottom: 28px;
+      }
     }
   }
 }

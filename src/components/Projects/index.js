@@ -61,24 +61,31 @@ const Projects = () => {
                   : project.skills}
               </p>
               <p className="project-description">{project.description}</p>
-              {(project.githubUrl || project.github) && (
-                <a
-                  className="card-btn"
-                  target="_blank"
-                  rel="noreferrer"
-                  href={project.githubUrl || project.github}
-                >
-                  Open Repository
-                </a>
-              )}
-              {(project.websiteUrl || project.url) && (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={project.websiteUrl || project.url}
-                >
-                  Open Website
-                </a>
+              {(project.githubUrl ||
+                project.github ||
+                project.websiteUrl ||
+                project.url) && (
+                <div className="project-actions">
+                  {(project.githubUrl || project.github) && (
+                    <a
+                      className="repository-link"
+                      target="_blank"
+                      rel="noreferrer"
+                      href={project.githubUrl || project.github}
+                    >
+                      Repository
+                    </a>
+                  )}
+                  {(project.websiteUrl || project.url) && (
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={project.websiteUrl || project.url}
+                    >
+                      Live site
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           ))}

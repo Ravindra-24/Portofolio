@@ -75,7 +75,7 @@ const Skills = () => {
     <>
       <div className="container skills-page">
         <div className="text-zone">
-          <h1>
+          <h1 className="page-title">
             <AnimatedLetters
               letterClass={letterClass}
               strArray={'Skills'.split('')}
